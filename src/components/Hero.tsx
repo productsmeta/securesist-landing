@@ -1,11 +1,10 @@
 "use client";
 import dynamic from "next/dynamic";
-import { motion } from "motion/react";
 import { ArrowRight, Play } from "lucide-react";
 
 // Lazy load WorldMap as it's heavy with DottedMap dependency
 const WorldMap = dynamic(() => import("./ui/world-map").then(mod => ({ default: mod.WorldMap })), {
-  loading: () => <div className="w-full aspect-[2/1] bg-gray-100 dark:bg-gray-900 rounded-lg animate-pulse" />,
+  loading: () => <div className="w-full aspect-[2/1] bg-gray-100/20 dark:bg-gray-900 rounded-lg animate-pulse" />,
   ssr: false, // Disable SSR for map as it uses browser APIs
 });
 
@@ -56,48 +55,20 @@ export function Hero() {
             
             {/* Hero Content - Overlay on Map */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="space-y-6"
-              >
+     
+              <div className="space-y-6">
                 <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
                   <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-cyan-400 bg-clip-text text-transparent inline-block">
-                    {text.split("").map((char, index) => (
-                      <motion.span
-                        key={index}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.2,
-                          delay: index * 0.03,
-                          ease: "easeOut",
-                        }}
-                        className="inline-block"
-                      >
-                        {char === " " ? "\u00A0" : char}
-                      </motion.span>
-                    ))}
+                    {text}
                   </span>
                 </h1>
                 
-                <motion.p
-                  className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
+                <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300 bg-slate-100/60">
                   SECURESIST is a cybersecurity awareness training platform that helps organizations protect their data and systems from cyber threats.
-                </motion.p>
+                </p>
                 
                 {/* Buttons */}
-                <motion.div
-                  className="flex flex-col gap-3 sm:flex-row sm:items-center justify-center pt-4"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                >
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-center pt-4">
                   <button className="group cursor-pointer relative inline-flex w-full items-center justify-center overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-500 px-7 py-3 text-base font-bold text-white shadow-lg shadow-purple-500/30 transition-all active:scale-[0.98] hover:scale-[1.02] sm:w-auto">
                     <span className="relative z-10 flex items-center">
                       Get Started
@@ -109,8 +80,8 @@ export function Hero() {
                     <Play className="mr-2 h-4 w-4 text-blue-600" />
                     Watch Demo
                   </button>
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

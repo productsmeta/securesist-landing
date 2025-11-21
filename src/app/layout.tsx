@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "react-hot-toast";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+ 
  
 //  Oxygen font
 const oxygen = Oxygen({
@@ -27,7 +27,7 @@ export default function RootLayout({
       <body
         className={`${oxygen.variable} antialiased`}
       >
-        <LoadingSpinner />
+  
         <Navbar />
         {children}
         <Footer />
