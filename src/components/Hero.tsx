@@ -1,114 +1,115 @@
-import Image from "next/image"
-import React from "react"
-import {
-  ArrowRight,
-  CheckCircle2,
-  Play,
-  Shield,
-  Users,
-  TrendingUp,
-  AlertTriangle,
-  Key,
-  Server,
-} from "lucide-react"
+"use client";
+import { WorldMap } from "./ui/world-map";
+import { motion } from "motion/react";
+import { ArrowRight, Play } from "lucide-react";
 
-const stats = [
-  { icon: Shield, label: "24/7 Defenses", value: "Active" }, // Further reduced text
-  { icon: Users, label: "50k+ Workforce", value: "Empowered" },
-  { icon: TrendingUp, label: "99.8% Success", value: "Detection" },
-]
+const text = "Secure Your Future with SECURESIST";
 
- 
-
-export const Hero = () => {
+export function Hero() {
   return (
-    <section className="relative min-h-[calc(100vh-80px)] overflow-hidden bg-white">
-      <div className="absolute inset-0 z-0 opacity-70">
-        <div className="absolute -left-1/4 -top-1/4 h-[500px] w-[500px] rounded-full bg-blue-100/30 blur-[150px] animate-slow-pulse" />
-        <div className="absolute -right-1/4 bottom-0 h-[400px] w-[400px] rounded-full bg-cyan-100/30 blur-[150px] animate-slow-pulse delay-1000" />
-      </div>
-
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)]" />
-      
-      <div className="relative z-10 mx-auto flex max-w-7xl flex-col gap-8 px-4 py-12 pt-24 lg:flex-row lg:items-center lg:gap-16 lg:px-8 lg:py-20"> {/* Reduced padding and gap */}
-        {/* Left Content */}
-        <div className="space-y-6 lg:max-w-xl lg:flex-1"> {/* Reduced max-width and space-y */}
-          
-
-          <div className="space-y-4"> {/* Reduced space-y */}
+    <div className="py-24 md:py-16 dark:bg-black bg-white w-full">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Map Container with Overlay Text */}
+        <div className="relative flex justify-center">
+          <div className="w-full max-w-5xl relative">
+            {/* Map */}
+            <WorldMap
+              dots={[
+                {
+                  start: {
+                    lat: 64.2008,
+                    lng: -149.4937,
+                  }, // Alaska (Fairbanks)
+                  end: {
+                    lat: 34.0522,
+                    lng: -118.2437,
+                  }, // Los Angeles
+                },
+                {
+                  start: { lat: 64.2008, lng: -149.4937 }, // Alaska (Fairbanks)
+                  end: { lat: -15.7975, lng: -47.8919 }, // Brazil (Brasília)
+                },
+                {
+                  start: { lat: -15.7975, lng: -47.8919 }, // Brazil (Brasília)
+                  end: { lat: 38.7223, lng: -9.1393 }, // Lisbon
+                },
+                {
+                  start: { lat: 51.5074, lng: -0.1278 }, // London
+                  end: { lat: 28.6139, lng: 77.209 }, // New Delhi
+                },
+                {
+                  start: { lat: 28.6139, lng: 77.209 }, // New Delhi
+                  end: { lat: 43.1332, lng: 131.9113 }, // Vladivostok
+                },
+                {
+                  start: { lat: 28.6139, lng: 77.209 }, // New Delhi
+                  end: { lat: -1.2921, lng: 36.8219 }, // Nairobi
+                },
+              ]}
+            />
             
-            {/* Smaller, but still impactful Headline */}
-            <h1 className="text-4xl font-extrabold leading-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              Your Team:{" "}
-              <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-yellow-600 bg-clip-text text-transparent">
-                First Line of Defense
-              </span>
-            </h1>
-            {/* Even smaller Description */}
-            <p className="text-base leading-relaxed text-gray-600 sm:text-lg">
-              Empower your workforce with dynamic security awareness. Detect threats faster, ensure compliance.
-            </p>
-          </div>
- 
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center pt-3"> {/* Reduced gap and padding */}
-            {/* Primary Button (Smaller padding, text) */}
-            <button className="group cursor-pointer relative inline-flex w-full items-center justify-center overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-500 px-7 py-3 text-base font-bold text-white shadow-lg shadow-purple-500/30 transition-all active:scale-[0.98] hover:scale-[1.02] sm:w-auto">
-              <span className="relative z-10 flex items-center">
-                Get Started
-                <ArrowRight className="ml-2 h-4 w-4" /> {/* Smaller icon */}
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-cyan-600 opacity-0 transition-opacity group-hover:opacity-100" />
-            </button>
-            {/* Secondary Button (Smaller padding, text) */}
-            <button className="group cursor-pointer inline-flex w-full items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-7 py-3 text-base font-semibold text-gray-700 transition-all hover:border-purple-500 hover:bg-blue-50 sm:w-auto">
-              <Play className="mr-2 h-4 w-4 text-blue-600" /> {/* Smaller icon */}
-              Watch Demo
-            </button>
-          </div>
-
-          {/* Stats Section (Smaller text, icons, padding) */}
-          <div className="grid gap-4 pt-4 sm:grid-cols-3"> {/* Reduced gap and padding */}
-            {stats.map(({ icon: Icon, label, value }) => (
-              <div
-                key={label}
-                className="group flex flex-col items-start rounded-lg border border-gray-200 bg-white p-4 shadow-md transition-all hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10"
+            {/* Hero Content - Overlay on Map */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-6"
               >
-                <Icon className="mb-2 h-6 w-6 text-blue-600" /> {/* Smaller icon */}
-                <div className="text-xl font-bold text-gray-900">{value}</div> {/* Smaller text */}
-                <p className="text-xs uppercase tracking-wider text-gray-500">
-                  {label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Image Section */}
-        <div className="relative flex flex-1 justify-center lg:justify-end">
-         
-
-          {/* Main image container (MAXIMIZED SIZE) */}
-          <div className="relative w-full max-w-[700px] lg:max-w-[800px] xl:max-w-[900px]"> {/* Significantly increased max-width */}
-         
-             
-              <div className="relative overflow-hidden rounded-xl border border-gray-300 ">
-                <Image
-                  src="/cyber-security-illustration-free-vector.png"
-                  alt="Cybersecurity protection illustration"
-                  width={1000} // Increased width for larger image in container
-                  height={1000} // Increased height for larger image in container
-                  className="h-full w-full object-cover"
-                  priority
-                  quality={95}
-                />
-               
-
-             
+                <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+                  <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-cyan-400 bg-clip-text text-transparent inline-block">
+                    {text.split("").map((char, index) => (
+                      <motion.span
+                        key={index}
+                        initial={{ opacity: 0, y: 20, scale: 0.5 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: index * 0.05,
+                          type: "spring",
+                          stiffness: 200,
+                        }}
+                        className="inline-block"
+                      >
+                        {char === " " ? "\u00A0" : char}
+                      </motion.span>
+                    ))}
+                  </span>
+                </h1>
+                
+                <motion.p
+                  className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                  SECURESIST is a cybersecurity awareness training platform that helps organizations protect their data and systems from cyber threats.
+                </motion.p>
+                
+                {/* Buttons */}
+                <motion.div
+                  className="flex flex-col gap-3 sm:flex-row sm:items-center justify-center pt-4"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  <button className="group cursor-pointer relative inline-flex w-full items-center justify-center overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-500 px-7 py-3 text-base font-bold text-white shadow-lg shadow-purple-500/30 transition-all active:scale-[0.98] hover:scale-[1.02] sm:w-auto">
+                    <span className="relative z-10 flex items-center">
+                      Get Started
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-cyan-600 opacity-0 transition-opacity group-hover:opacity-100" />
+                  </button>
+                  <button className="group cursor-pointer inline-flex w-full items-center justify-center rounded-lg border-2 border-gray-300 bg-white/90 dark:bg-black/90 dark:border-gray-700 backdrop-blur-sm px-7 py-3 text-base font-semibold text-gray-700 dark:text-gray-300 transition-all hover:border-purple-500 hover:bg-blue-50 dark:hover:bg-gray-800 sm:w-auto">
+                    <Play className="mr-2 h-4 w-4 text-blue-600" />
+                    Watch Demo
+                  </button>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  )
+    </div>
+  );
 }
