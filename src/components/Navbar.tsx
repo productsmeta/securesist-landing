@@ -63,7 +63,7 @@ const Navbar = () => {
             </ul>
             
             {/* Enhanced CTA Button */}
-            <Button  className="group relative overflow-hidden bg-blue-600 border-0 px-6 py-3 text-sm font-semibold shadow-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-blue-500/25 hover:scale-105">
+            <Button  className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-500 border-0 px-6 py-3 text-sm font-semibold shadow-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-blue-500/25 hover:scale-105">
               <Link href="/contact" className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
                 GET STARTED
