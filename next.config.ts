@@ -14,13 +14,13 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
   },
   // Optimize production builds
-  swcMinify: true,
+  // swcMinify: true,
   // Reduce JavaScript bundle size
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   // Optimize fonts
-  optimizeFonts: true,
+  // optimizeFonts: true,
 };
 
 export default nextConfig;
