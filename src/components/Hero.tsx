@@ -82,7 +82,7 @@ export const Hero = memo(function Hero() {
                
                 
                 {/* Enhanced Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center  ">
                   <button className="group relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-purple-500 px-8 py-4 text-base font-bold text-white shadow-2xl shadow-purple-500/30 transition-all duration-300 hover:shadow-purple-500/50 hover:scale-105 active:scale-100 min-w-[180px]">
                     <span className="relative z-10 flex items-center gap-2">
                       Get Started

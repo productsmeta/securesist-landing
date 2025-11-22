@@ -20,7 +20,7 @@ All colors MUST be HSL.
   body {
     background-color: #ffffff;
     color: hsl(222.2 84% 4.9%);
-    font-family: var(--font-oxygen), system-ui, -apple-system, sans-serif;
+      font-family: var(--font-comfortaa), system-ui, -apple-system, sans-serif;
     min-height: 100vh;
   }
 

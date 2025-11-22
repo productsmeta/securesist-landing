@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Oxygen } from "next/font/google";
+// 
+// Comfortaa font
+import { Comfortaa } from "next/font/google";
+// import { Oxygen } from "next/font/google";
+
 import "./globals.css";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
@@ -14,10 +18,10 @@ const ToasterClient = dynamic(() => import("@/components/ToasterClient").then(mo
  
  
 //  Oxygen font - optimized loading
-const oxygen = Oxygen({
+const comfortaa = Comfortaa({
   subsets: ["latin"],
   weight: ["300", "400", "700"],
-  variable: "--font-oxygen",
+  variable: "--font-comfortaa",
   display: "swap", // Optimize font loading
   preload: true,
 });
@@ -34,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${oxygen.variable} antialiased`}
+          className={`${comfortaa.variable} antialiased`}
       >
   
         <Navbar />
