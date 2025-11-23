@@ -1,8 +1,8 @@
 "use client";
 import { memo } from "react";
 import dynamic from "next/dynamic";
-import { ArrowRight, Play, Shield } from "lucide-react";
-
+import { Shield } from "lucide-react";
+import { Button } from "./ui/button";
 // Lazy load WorldMap as it's heavy with DottedMap dependency
 // Note: Client component will automatically only render on client side
 const WorldMap = dynamic(() => import("./ui/world-map").then(mod => ({ default: mod.WorldMap })), {
@@ -45,7 +45,7 @@ const MAP_DOTS = [
 
 export const Hero = memo(function Hero() {
   return (
-    <section className="relative py-30 h-[100%]  my-22 md:py-16 md:my-0 w-full overflow-hidden">
+    <section className="relative py-20 h-[100%]  my-10 md:py-16 md:my-0 w-full overflow-hidden">
       <div className="relative  py-10 h-[100%]   md:py-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Map Container with Overlay Text */}
         <div className="relative flex justify-center" style={{ contain: "layout" }}>
@@ -61,16 +61,9 @@ export const Hero = memo(function Hero() {
             {/* Hero Content - Overlay on Map with better backdrop */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6 z-10">
               <div className="space-y-8 max-w-4xl">
-                {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200/50 dark:border-gray-700/50">
-                  <Shield className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Enterprise Security Platform
-                  </span>
-                </div>
-
+              
                 {/* Main Heading */}
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
+                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
               <span className="block  text-slate-800">
                    Secure Your Future with 
                   </span>
@@ -81,22 +74,7 @@ export const Hero = memo(function Hero() {
                 
                
                 
-                {/* Enhanced Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center  ">
-                  <button className="group relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-purple-500 px-8 py-4 text-base font-bold text-white shadow-2xl shadow-purple-500/30 transition-all duration-300 hover:shadow-purple-500/50 hover:scale-105 active:scale-100 min-w-[180px]">
-                    <span className="relative z-10 flex items-center gap-2">
-                      Get Started
-                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-700 via-purple-700 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </button>
-                  
-                  <button className="group relative inline-flex items-center justify-center rounded-xl border-2 border-gray-300 dark:border-gray-600 px-8 py-4 text-base font-semibold text-gray-700 dark:text-gray-200 transition-all duration-300 hover:border-purple-500 dark:hover:border-purple-400 hover:shadow-xl hover:scale-105 active:scale-100 min-w-[180px]">
-                    <Play className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400 transition-transform group-hover:scale-110" />
-                    Watch Demo
-                  </button>
-                </div>
+            
 
                 {/* Trust indicators */}
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-sm text-slate-600 dark:text-slate-400">
