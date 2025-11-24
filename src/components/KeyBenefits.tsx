@@ -3,41 +3,56 @@
 import { memo } from 'react';
 import { Users, Target, BarChart3, CheckCircle } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
+import { useTranslations } from 'next-intl';
 
 export const KeyBenefits = memo(() => {
+  const t = useTranslations('keyBenefits');
+  
   const benefits = [
     {
       icon: Users,
-      title: "Understandable Training",
-      description: "Short, interactive lessons that keep employees engaged and help them remember what really matters.",
+      title: t('understandableTraining.title'),
+      description: t('understandableTraining.description'),
       color: "blue",
       gradient: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-50 to-cyan-50",
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
-      features: ["5-10 min modules", "Interactive scenarios", "Gamified learning"]
+      features: [
+        t('understandableTraining.features.modules'),
+        t('understandableTraining.features.scenarios'),
+        t('understandableTraining.features.learning')
+      ]
     },
     {
       icon: Target,
-      title: "Fits Each Role",
-      description: "Content tailored to different jobs, so every employee learns the skills most relevant to their work.",
+      title: t('fitsEachRole.title'),
+      description: t('fitsEachRole.description'),
       color: "purple",
       gradient: "from-purple-500 to-pink-500",
       bgGradient: "from-purple-50 to-pink-50",
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
-      features: ["Role-based content", "Personalized paths", "Industry-specific"]
+      features: [
+        t('fitsEachRole.features.content'),
+        t('fitsEachRole.features.paths'),
+        t('fitsEachRole.features.specific')
+      ]
     },
     {
       icon: BarChart3,
-      title: "Clear Reports & Insights",
-      description: "See who's improving, spot weak points, and track overall progress with simple dashboards.",
+      title: t('clearReports.title'),
+      description: t('clearReports.description'),
       color: "green",
       gradient: "from-green-500 to-emerald-500",
       bgGradient: "from-green-50 to-emerald-50",
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      features: ["Real-time analytics", "Risk assessment", "Compliance tracking"]
+      features: [
+        t('clearReports.features.analytics'),
+        t('clearReports.features.assessment'),
+        t('clearReports.features.tracking')
+      ]
     }
   ];
 
@@ -47,10 +62,10 @@ export const KeyBenefits = memo(() => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <SectionHeader
-          badgeText="Why Choose SECURESIST"
-          title="Key"
-          titleHighlight="Benefits"
-          description="Transform your cybersecurity training with our innovative approach designed for the modern workforce"
+          badgeText={t('badge')}
+          title={t('title')}
+          titleHighlight={t('titleHighlight')}
+          description={t('description')}
         />
         
         {/* Benefits Grid */}

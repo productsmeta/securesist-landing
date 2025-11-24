@@ -36,8 +36,15 @@ All colors MUST be HSL.
   body {
     background-color: #ffffff;
     color: hsl(222.2 84% 4.9%);
-      font-family: var(--font-comfortaa), system-ui, -apple-system, sans-serif;
     min-height: 100vh;
+  }
+
+  .font-comfortaa {
+    font-family: var(--font-comfortaa), system-ui, -apple-system, sans-serif;
+  }
+
+  .font-zain {
+    font-family: var(--font-zain), system-ui, -apple-system, sans-serif;
   }
 
   /* Performance optimizations to prevent forced reflows */

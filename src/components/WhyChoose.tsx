@@ -10,23 +10,26 @@ import {
   ArrowRight
 } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
+import { useTranslations } from "next-intl";
 
 export const WhyChoose = memo(() => {
+  const t = useTranslations('whyChoose');
+  
   const features = [
     {
       icon: Users,
-      title: "High Engagement",
-      benefit: "Interactive content ensures maximum employee retention.", // Simplified benefit text
+      title: t('highEngagement.title'),
+      benefit: t('highEngagement.benefit'),
       color: "blue",
-      bgColor: "bg-blue-500/10", // Very light background
+      bgColor: "bg-blue-500/10",
       textColor: "text-blue-600",
       gradient: "from-blue-500 to-cyan-500",
       shadow: "shadow-blue-500/10"
     },
     {
       icon: Target,
-      title: "Role-Based Training",
-      benefit: "Personalized paths deliver highly relevant education.", // Simplified benefit text
+      title: t('roleBased.title'),
+      benefit: t('roleBased.benefit'),
       color: "purple",
       bgColor: "bg-purple-500/10",
       textColor: "text-purple-600",
@@ -35,8 +38,8 @@ export const WhyChoose = memo(() => {
     },
     {
       icon: Zap,
-      title: "Campaign Automation",
-      benefit: "Automated schedules save time and ensure coverage.",
+      title: t('automation.title'),
+      benefit: t('automation.benefit'),
       color: "green",
       bgColor: "bg-green-500/10",
       textColor: "text-green-600",
@@ -45,8 +48,8 @@ export const WhyChoose = memo(() => {
     },
     {
       icon: BarChart3,
-      title: "Actionable Reporting",
-      benefit: "Clear dashboards focus efforts on high-risk areas.",
+      title: t('reporting.title'),
+      benefit: t('reporting.benefit'),
       color: "orange",
       bgColor: "bg-orange-500/10",
       textColor: "text-orange-600",
@@ -68,10 +71,10 @@ export const WhyChoose = memo(() => {
       <div className="container mx-auto px-4 relative z-10">
         
           <SectionHeader
-          badgeText="Why Choose SECURESIST"
-          title="Why Choose"
-          titleHighlight="SECURESIST"
-          description="Discover the advantages that set us apart in cybersecurity training"
+          badgeText={t('badge')}
+          title={t('title')}
+          titleHighlight={t('titleHighlight')}
+          description={t('description')}
         />
         
         {/* Features Grid (4 columns for small cards) */}
@@ -101,7 +104,7 @@ export const WhyChoose = memo(() => {
                 
                 {/* Hover Arrow (Minimalist Indicator) */}
                 <div className={`mt-3 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${feature.textColor}`}>
-                    <span className="text-xs font-semibold">Explore</span>
+                    <span className="text-xs font-semibold">{t('explore')}</span>
                     <ArrowRight className="h-3 w-3 ml-1" />
                 </div>
               </div>
@@ -113,15 +116,15 @@ export const WhyChoose = memo(() => {
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
             <div className="text-4xl font-extrabold text-blue-600 mb-2">98%</div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">Training Completion Rate</div>
+            <div className="text-xs uppercase tracking-wider text-slate-500">{t('stats.completionRate')}</div>
           </div>
           <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
             <div className="text-4xl font-extrabold text-purple-600 mb-2">75%</div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">Incident Reduction</div>
+            <div className="text-xs uppercase tracking-wider text-slate-500">{t('stats.incidentReduction')}</div>
           </div>
           <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
             <div className="text-4xl font-extrabold text-green-600 mb-2">5 Min</div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">Avg. Module Duration</div>
+            <div className="text-xs uppercase tracking-wider text-slate-500">{t('stats.avgDuration')}</div>
           </div>
         </div>
       </div>

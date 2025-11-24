@@ -1,8 +1,7 @@
 "use client";
 import { memo } from "react";
-import dynamic from "next/dynamic";
-import { Shield } from "lucide-react";
-import { Button } from "./ui/button";
+import dynamic from "next/dynamic"; 
+import { useTranslations } from "next-intl";
 // Lazy load WorldMap as it's heavy with DottedMap dependency
 // Note: Client component will automatically only render on client side
 const WorldMap = dynamic(() => import("./ui/world-map").then(mod => ({ default: mod.WorldMap })), {
@@ -44,6 +43,8 @@ const MAP_DOTS = [
 ];
 
 export const Hero = memo(function Hero() {
+  const t = useTranslations('hero');
+  
   return (
     <section className="relative py-20 h-[100%]  my-10 md:py-16 md:my-0 w-full overflow-hidden">
       <div className="relative  py-10 h-[100%]   md:py-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,11 +62,11 @@ export const Hero = memo(function Hero() {
             {/* Hero Content - Overlay on Map with better backdrop */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6 z-10">
               <div className="space-y-8 max-w-4xl">
-              
+               
                 {/* Main Heading */}
                 <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
               <span className="block  text-slate-800">
-                   Secure Your Future with 
+                   {t('title')}
                   </span>
                   <span className="block bg-gradient-to-r from-blue-600 via-purple-500 to-cyan-400 bg-clip-text text-transparent animate-gradient-x bg-[length:200%_auto]">
                    {text}
@@ -80,15 +81,15 @@ export const Hero = memo(function Hero() {
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-sm text-slate-600 dark:text-slate-400">
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                    <span>Trusted by 500+ Companies</span>
+                    <span>{t('trustedBy')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-                    <span>99.9% Uptime</span>
+                    <span>{t('uptime')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
-                    <span>Enterprise Grade</span>
+                    <span>{t('enterpriseGrade')}</span>
                   </div>
                 </div>
               </div>

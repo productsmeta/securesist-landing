@@ -1,13 +1,18 @@
-import Link from "next/link";
-import Image from "next/image"; // Import Image component
+"use client";
+
+import { Link } from "@/i18n/routing";
+import Image from "next/image";
 import { Shield, Target, Award, Users, ArrowRight, Zap, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/SectionHeader";
+import { useTranslations } from "next-intl";
 
 // Placeholder for the image path
 const IMAGE_URL = "/corporate-team-meeting-cybersecurity.jpg"; 
 
 const About = () => {
+  const t = useTranslations('about');
+  
   return (
     <main className="min-h-screen bg-white">
       {/* Subtle background texture/pattern */}
@@ -16,10 +21,10 @@ const About = () => {
       {/* Hero Section */}
       <div className="container mx-auto py-20 md:py-32 relative z-10">
         <SectionHeader
-          badgeText="About Meta Tech"
-          title="About"
-          titleHighlight="Meta Tech"
-          description="At Meta Techs, we recognize that the greatest defense against cyber threats is your people. We are dedicated to providing the tools and knowledge necessary to transform every employee into an active defender."
+          badgeText={t('badge')}
+          title={t('title')}
+          titleHighlight={t('titleHighlight')}
+          description={t('description')}
         />
 
         {/* Main Content Sections */}
@@ -46,17 +51,17 @@ const About = () => {
             <div className="space-y-6">
               <div className="flex items-center space-x-3 text-2xl font-bold tracking-tight text-slate-900">
                 <Target className="h-6 w-6 text-purple-600" />
-                <h2>Our Solution: <span className="text-purple-600">SECURESIST</span></h2>
+                <h2>{t('solution.title')} <span className="text-purple-600">{t('solution.titleHighlight')}</span></h2>
               </div>
               <p className="text-xl leading-relaxed text-slate-700">
-                We created **SECURESIST**, our all-in-one cybersecurity awareness platform, to bridge the gap between technical security and human behavior. 
+                {t('solution.description1')}
               </p>
               <p className="text-lg leading-relaxed text-slate-600">
-                SECURESIST helps organizations of all sizes build a **strong security culture** by turning employees from potential targets into **active defenders** through engaging, personalized, and effective training modules.
+                {t('solution.description2')}
               </p>
-              <Link href="/solution" passHref>
+              <Link href="/solution">
                 <div className="inline-flex items-center text-blue-600 font-semibold group transition-colors hover:text-blue-800">
-                  See how it works 
+                  {t('solution.seeHow')}
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
@@ -70,7 +75,7 @@ const About = () => {
           <section className="space-y-12">
             <div className="text-center">
               <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900">
-                Our Core Mission & Values
+                {t('mission.title')}
               </h2>
               <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
             </div>
@@ -86,9 +91,9 @@ const About = () => {
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10 text-red-600">
                     <Star className="h-6 w-6" />
                   </div>
-                  <h3 className="mb-2 text-xl font-bold text-slate-900">Empowering Teams</h3>
+                  <h3 className="mb-2 text-xl font-bold text-slate-900">{t('mission.empowering.title')}</h3>
                   <p className="text-slate-600 text-base">
-                  To make cybersecurity  simple, engaging, and effective  for every business, empowering teams with confidence.
+                  {t('mission.empowering.description')}
                   </p>
                 </div>
                 {/* Value 1: Built by Experts */}
@@ -96,9 +101,9 @@ const About = () => {
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10 text-blue-600">
                     <Shield className="h-6 w-6" />
                   </div>
-                  <h3 className="mb-2 text-xl font-bold text-slate-900">Expert-Led</h3>
+                  <h3 className="mb-2 text-xl font-bold text-slate-900">{t('mission.expert.title')}</h3>
                   <p className="text-slate-600 text-base">
-                    Developed by certified cybersecurity specialists with deep industry expertise.
+                    {t('mission.expert.description')}
                   </p>
                 </div>
                 
@@ -107,9 +112,9 @@ const About = () => {
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10 text-purple-600">
                     <Users className="h-6 w-6" />
                   </div>
-                  <h3 className="mb-2 text-xl font-bold text-slate-900">People-First</h3>
+                  <h3 className="mb-2 text-xl font-bold text-slate-900">{t('mission.people.title')}</h3>
                   <p className="text-slate-600 text-base">
-                    Easy-to-follow, gamified training that speaks plain language, driving real behavior change.
+                    {t('mission.people.description')}
                   </p>
                 </div>
               </div>
@@ -119,14 +124,14 @@ const About = () => {
           {/* === 3. Call to Action (Simple Footer) === */}
           <section className="text-center pt-8">
             <h3 className="mb-4 text-3xl font-bold text-slate-800">
-                Ready to Meet Your Cybersecurity Goals?
+                {t('cta.title')}
             </h3>
             <p className="mx-auto max-w-2xl text-lg text-slate-600 mb-8">
-                Request a free demo and see the SECURESIST difference for yourself.
+                {t('cta.description')}
             </p>
         <Button className="group relative inline-flex items-center justify-center rounded-md bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6 hover:shadow-md text-lg font-bold text-white  transition-all duration-300 hover:scale-[1.02]">
           <Link href="/contact" className="relative z-10 flex items-center justify-center gap-2">
-            Request a Demo
+            {t('cta.button')}
             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Link>
         </Button>

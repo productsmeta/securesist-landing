@@ -1,0 +1,157 @@
+{
+  "nav": {
+    "home": "HOME",
+    "about": "ABOUT US",
+    "solutions": "SOLUTIONS",
+    "partners": "PARTNERS",
+    "pressCenter": "PRESS CENTER",
+    "getStarted": "GET STARTED"
+  },
+  "hero": {
+    "title": "Secure Your Future with",
+    "trustedBy": "Trusted by 500+ Companies",
+    "uptime": "99.9% Uptime",
+    "enterpriseGrade": "Enterprise Grade"
+  },
+  "keyBenefits": {
+    "badge": "Why Choose SECURESIST",
+    "title": "Key",
+    "titleHighlight": "Benefits",
+    "description": "Transform your cybersecurity training with our innovative approach designed for the modern workforce",
+    "understandableTraining": {
+      "title": "Understandable Training",
+      "description": "Short, interactive lessons that keep employees engaged and help them remember what really matters.",
+      "features": {
+        "modules": "5-10 min modules",
+        "scenarios": "Interactive scenarios",
+        "learning": "Gamified learning"
+      }
+    },
+    "fitsEachRole": {
+      "title": "Fits Each Role",
+      "description": "Content tailored to different jobs, so every employee learns the skills most relevant to their work.",
+      "features": {
+        "content": "Role-based content",
+        "paths": "Personalized paths",
+        "specific": "Industry-specific"
+      }
+    },
+    "clearReports": {
+      "title": "Clear Reports & Insights",
+      "description": "See who's improving, spot weak points, and track overall progress with simple dashboards.",
+      "features": {
+        "analytics": "Real-time analytics",
+        "assessment": "Risk assessment",
+        "tracking": "Compliance tracking"
+      }
+    }
+  },
+  "whyChoose": {
+    "badge": "Why Choose SECURESIST",
+    "title": "Why Choose",
+    "titleHighlight": "SECURESIST",
+    "description": "Discover the advantages that set us apart in cybersecurity training",
+    "highEngagement": {
+      "title": "High Engagement",
+      "benefit": "Interactive content ensures maximum employee retention."
+    },
+    "roleBased": {
+      "title": "Role-Based Training",
+      "benefit": "Personalized paths deliver highly relevant education."
+    },
+    "automation": {
+      "title": "Campaign Automation",
+      "benefit": "Automated schedules save time and ensure coverage."
+    },
+    "reporting": {
+      "title": "Actionable Reporting",
+      "benefit": "Clear dashboards focus efforts on high-risk areas."
+    },
+    "explore": "Explore",
+    "stats": {
+      "completionRate": "Training Completion Rate",
+      "incidentReduction": "Incident Reduction",
+      "avgDuration": "Avg. Module Duration"
+    }
+  },
+  "cta": {
+    "title": "Ready to",
+    "titleHighlight": "Start Protecting",
+    "titleEnd": "your Team?",
+    "subtitle": "Don't wait for the next breach. Schedule a personalized demo to see how SECURESIST delivers measurable, human-layer security intelligence across your organization.",
+    "requestDemo": "Request a Free Demo",
+    "contactSales": "Contact Sales",
+    "noCreditCard": "No credit card needed",
+    "quickSetup": "Takes less than 30 minutes",
+    "liveMetrics": "Live Metrics"
+  },
+  "footer": {
+    "description": "Transform your organization's cybersecurity posture with intelligent, role-based training that keeps your team engaged and secure.",
+    "company": {
+      "title": "Company",
+      "about": "About Us",
+      "team": "Our Team",
+      "careers": "Careers",
+      "press": "Press Center"
+    },
+    "solutions": {
+      "title": "Solutions",
+      "training": "Cybersecurity Training",
+      "awareness": "Awareness Programs",
+      "compliance": "Compliance Tools",
+      "risk": "Risk Assessment"
+    },
+    "resources": {
+      "title": "Resources",
+      "blog": "Blog",
+      "caseStudies": "Case Studies",
+      "whitepapers": "Whitepapers",
+      "webinars": "Webinars"
+    },
+    "support": {
+      "title": "Support",
+      "help": "Help Center",
+      "contact": "Contact Support",
+      "training": "Training Resources",
+      "api": "API Documentation"
+    },
+    "copyright": "© {year} SECURESIST. All rights reserved.",
+    "email": "info@securesist.com",
+    "phone": "+1 (555) 123-4567",
+    "address": "123 Security Street, Tech City, TC 12345"
+  },
+  "about": {
+    "badge": "About Meta Tech",
+    "title": "About",
+    "titleHighlight": "Meta Tech",
+    "description": "At Meta Techs, we recognize that the greatest defense against cyber threats is your people. We are dedicated to providing the tools and knowledge necessary to transform every employee into an active defender.",
+    "solution": {
+      "title": "Our Solution:",
+      "titleHighlight": "SECURESIST",
+      "description1": "We created **SECURESIST**, our all-in-one cybersecurity awareness platform, to bridge the gap between technical security and human behavior.",
+      "description2": "SECURESIST helps organizations of all sizes build a **strong security culture** by turning employees from potential targets into **active defenders** through engaging, personalized, and effective training modules.",
+      "seeHow": "See how it works"
+    },
+    "mission": {
+      "title": "Our Core Mission & Values",
+      "empowering": {
+        "title": "Empowering Teams",
+        "description": "To make cybersecurity simple, engaging, and effective for every business, empowering teams with confidence."
+      },
+      "expert": {
+        "title": "Expert-Led",
+        "description": "Developed by certified cybersecurity specialists with deep industry expertise."
+      },
+      "people": {
+        "title": "People-First",
+        "description": "Easy-to-follow, gamified training that speaks plain language, driving real behavior change."
+      }
+    },
+    "cta": {
+      "title": "Ready to Meet Your Cybersecurity Goals?",
+      "description": "Request a free demo and see the SECURESIST difference for yourself.",
+      "button": "Request a Demo"
+    }
+  }
+}
+
