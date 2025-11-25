@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Link, usePathname } from "@/i18n/routing";
+import { Link, usePathname } from "../i18n/routing";
 import { useTranslations } from "next-intl";
 import { Menu, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";

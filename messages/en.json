@@ -152,6 +152,227 @@
       "description": "Request a free demo and see the SECURESIST difference for yourself.",
       "button": "Request a Demo"
     }
+  },
+  "solutions": {
+    "badge": "Our Solutions",
+    "title": "Comprehensive",
+    "titleHighlight": "Security Solutions",
+    "description": "Protect your organization with our cutting-edge cybersecurity training and simulation platforms designed for the modern workforce",
+    "solution1": {
+      "title": "Cybersecurity Awareness Training",
+      "subtitle": "Empower Your Team with Knowledge",
+      "description": "Transform your organization's security posture with our comprehensive, role-based cybersecurity training platform. Our interactive modules keep employees engaged while teaching them to recognize and respond to real-world threats.",
+      "features": {
+        "feature1": "Interactive 5-10 minute modules",
+        "feature2": "Role-based content delivery",
+        "feature3": "Gamified learning experience",
+        "feature4": "Real-time progress tracking",
+        "feature5": "Automated campaign scheduling",
+        "feature6": "Compliance reporting"
+      },
+      "learnMore": "Learn More"
+    },
+    "solution2": {
+      "title": "Phishing Simulation & Testing",
+      "subtitle": "Test and Improve Your Defenses",
+      "description": "Proactively identify vulnerabilities in your organization's security awareness through realistic phishing simulations. Our platform helps you test employee responses and provides detailed analytics to strengthen your human firewall.",
+      "features": {
+        "feature1": "Realistic phishing templates",
+        "feature2": "Customizable campaign scenarios",
+        "feature3": "Detailed click-through analytics",
+        "feature4": "Automated remediation training",
+        "feature5": "Risk scoring and reporting",
+        "feature6": "Multi-vector attack simulation"
+      },
+      "learnMore": "Learn More"
+    },
+    "stats": {
+      "completionRate": {
+        "value": "98%",
+        "label": "Training Completion Rate"
+      },
+      "incidentReduction": {
+        "value": "75%",
+        "label": "Incident Reduction"
+      },
+      "companiesProtected": {
+        "value": "500+",
+        "label": "Companies Protected"
+      }
+    },
+    "cta": {
+      "title": "Ready to Secure Your Organization?",
+      "description": "Get started with a free demo and see how SECURESIST can transform your cybersecurity training",
+      "contactSales": "Contact Sales"
+    }
+  },
+  "partners": {
+    "badge": "Partner with SECURESIST",
+    "title": "Partner",
+    "titleHighlight": "SECURESIST",
+    "description": "Together, we help customers build resilient security cultures with role-based training, measurable outcomes, and trusted expertise.",
+    "benefits": {
+      "noUpfrontCosts": "No upfront costs",
+      "flexibleModels": "Flexible models",
+      "dedicatedSupport": "Dedicated support"
+    },
+    "whyPartner": {
+      "title": "Why Partner with Us",
+      "description": "Grow revenue, deliver measurable outcomes, and elevate your services portfolio"
+    },
+    "benefit1": {
+      "title": "Expert-Led Platform",
+      "description": "Built by Meta Techs cybersecurity specialists with proven methodologies."
+    },
+    "benefit2": {
+      "title": "Attach to Existing Services",
+      "description": "Complement risk assessments, vCISO, MSSP, and compliance offerings."
+    },
+    "benefit3": {
+      "title": "Faster Customer Outcomes",
+      "description": "Launch quickly with curated content, automation, and measurable insights."
+    },
+    "benefit4": {
+      "title": "Enablement & Certification",
+      "description": "Training materials, playbooks, and co-selling resources for your team."
+    },
+    "benefit5": {
+      "title": "Enterprise-Ready",
+      "description": "Security, privacy, and reporting controls for regulated industries."
+    },
+    "benefit6": {
+      "title": "Dedicated Partner Support",
+      "description": "Access to solution engineers and partner success resources."
+    },
+    "joinForm": {
+      "title": "Join Our Partner Program",
+      "description": "Become a SECURESIST partner and help organizations build stronger security cultures. Fill out the form below to get started.",
+      "applicationTitle": "Partner Application",
+      "applicationDescription": "Complete the form below and our team will reach out to discuss partnership opportunities.",
+      "companyName": "Company Name *",
+      "companyOwner": "Company Owner / Contact Person *",
+      "email": "Email Address *",
+      "whatsapp": "WhatsApp Number *",
+      "mobileNumber": "Mobile Number *",
+      "city": "City *",
+      "country": "Country *",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "joinPartners": "Join 500+ Partners Worldwide",
+      "commissionRates": "Competitive commission rates",
+      "marketingSupport": "Marketing and sales support",
+      "dedicatedManager": "Dedicated partner success manager"
+    }
+  },
+  "contact": {
+    "badge": "Get Started",
+    "title": "Request a",
+    "titleHighlight": "Demo",
+    "description": "See SECURESIST in action. Get a personalized walkthrough of our cybersecurity awareness training platform and discover how it can protect your organization.",
+    "scheduleTitle": "Schedule Your Demo",
+    "scheduleDescription": "We'll respond within 24 hours",
+    "firstName": "First Name *",
+    "lastName": "Last Name *",
+    "workEmail": "Work Email *",
+    "companyName": "Company Name *",
+    "jobTitle": "Job Title *",
+    "companySize": "Company Size *",
+    "selectSize": "Select size",
+    "size1": "1-50 employees",
+    "size2": "51-200 employees",
+    "size3": "201-500 employees",
+    "size4": "501-1000 employees",
+    "size5": "1000+ employees",
+    "industry": "Industry *",
+    "selectIndustry": "Select industry",
+    "industryTech": "Technology",
+    "industryHealthcare": "Healthcare",
+    "industryFinance": "Finance & Banking",
+    "industryManufacturing": "Manufacturing",
+    "industryRetail": "Retail",
+    "industryEducation": "Education",
+    "industryGovernment": "Government",
+    "industryOther": "Other",
+    "additionalInfo": "Additional Information",
+    "privacyAgreement": "I agree to the Privacy Policy and consent to being contacted about SECURESIST.",
+    "requestDemo": "Request Demo",
+    "trustedTitle": "Trusted by 500+ Companies",
+    "trustedDescription": "Join leading organizations who trust SECURESIST to protect their teams and data.",
+    "whatToExpect": {
+      "title": "What to Expect",
+      "step1": {
+        "num": "1",
+        "title": "Personalized Walkthrough",
+        "description": "See SECURESIST configured for your industry and company size"
+      },
+      "step2": {
+        "num": "2",
+        "title": "Live Demo",
+        "description": "Interactive demonstration of key features and capabilities"
+      },
+      "step3": {
+        "num": "3",
+        "title": "Q&A Session",
+        "description": "Get answers to your specific questions and concerns"
+      },
+      "step4": {
+        "num": "4",
+        "title": "Next Steps",
+        "description": "Receive a customized proposal and implementation plan"
+      }
+    },
+    "demoHighlights": {
+      "title": "Demo Highlights",
+      "training": {
+        "title": "Employee Training",
+        "description": "Interactive learning modules and simulations"
+      },
+      "roleBased": {
+        "title": "Role-Based Content",
+        "description": "Personalized training for different job functions"
+      },
+      "analytics": {
+        "title": "Analytics Dashboard",
+        "description": "Comprehensive reporting and insights"
+      },
+      "automation": {
+        "title": "Automated Workflows",
+        "description": "Streamlined campaign management"
+      }
+    },
+    "getInTouch": {
+      "title": "Get in Touch",
+      "email": "Email",
+      "emailValue": "demo@securesist.com",
+      "phone": "Phone",
+      "phoneValue": "+1 (555) 123-4567",
+      "responseTime": "Response Time",
+      "responseTimeValue": "Within 24 hours"
+    }
+  },
+  "howItWorks": {
+    "badge": "Simple 5-Step Process",
+    "title": "How It Works",
+    "description": "SECURESIST makes cybersecurity awareness simple and effective in just a few steps",
+    "step1": {
+      "title": "Set Up Your Program",
+      "description": "Choose your training goals, audience, and schedule. The platform is quick to configure and ready to launch."
+    },
+    "step2": {
+      "title": "Deliver Engaging Training",
+      "description": "Employees receive short, interactive lessons and phishing simulations designed to fit into their daily workflow."
+    },
+    "step3": {
+      "title": "Monitor Progress",
+      "description": "Track completion rates, quiz scores, and simulation results in easy-to-read dashboards."
+    },
+    "step4": {
+      "title": "Identify Risks",
+      "description": "Spot which teams or individuals need extra support, and target training where it's needed most."
+    },
+    "step5": {
+      "title": "Strengthen Your Security Culture",
+      "description": "Over time, your workforce becomes more aware, more confident, and better equipped to stop cyber threats."
+    }
   }
 }
-

@@ -1,7 +1,7 @@
  // middleware.ts (place at project root)
 import { NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
-import { routing } from "./src/i18n/routing"; // عدل المسار لو عندك مكان مختلف
+import { routing } from "./src/i18n/routing";  
 
 const intlMiddleware = createMiddleware(routing);
 

@@ -2,7 +2,7 @@ import { Comfortaa, Zain } from "next/font/google";
 import "./../globals.css";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar"; 
-import { routing } from "@/i18n/routing";
+import { routing } from "../../i18n/routing";
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
