@@ -40,13 +40,13 @@ export default async function LocaleLayout({
 }) {
   const locale = (await params).locale;
 
-  // لو اللغه مش موجوده
-  if (!routing.locales.includes(locale)) notFound();
+    // لو اللغه مش موجوده
+  if (!routing.locales.includes(locale as 'en' | 'ar')) notFound();
 
   const isArabic = locale === "ar";
 
   // تحميل المسجات من object messages
-  const localeMessages = messages[locale] || messages["en"];
+  const localeMessages = messages[locale as 'en' | 'ar'] || messages["en"];
 
   return (
     <NextIntlClientProvider locale={locale} messages={localeMessages}>
