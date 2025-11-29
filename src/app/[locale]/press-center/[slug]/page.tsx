@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -363,7 +363,7 @@ const getCategoryColor = (category: string) => {
   return colors[category] || "bg-slate-100 text-slate-700 border-slate-200";
 };
 
-export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+export default function BlogPostPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug } = use(params);
   const post = getBlogPost(slug);
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SectionHeader } from "@/components/SectionHeader";
-import Image from "next/image";
+import { apiFetch, DemoUrl } from "@/helpers/apiConfig";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 import { 
   ArrowRight, 
@@ -28,7 +31,143 @@ import {
   Send
 } from "lucide-react";
 
+interface DemoFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  company: string;
+  jobTitle: string;
+  companySize: string;
+  industry: string;
+  message: string;
+  mobileNumber: string;
+  privacy: boolean;
+}
+
 export default function Contact() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<DemoFormData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    company: "",
+    jobTitle: "",
+    companySize: "",
+    industry: "",
+    message: "",
+    mobileNumber: "",
+    privacy: false,
+  });
+
+  const handleInputChange = (field: keyof DemoFormData, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const validateForm = (): boolean => {
+    if (!formData.firstName.trim()) {
+      toast.error("First name is required");
+      return false;
+    }
+    if (!formData.lastName.trim()) {
+      toast.error("Last name is required");
+      return false;
+    }
+    if (!formData.email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+    if (!formData.company.trim()) {
+      toast.error("Company name is required");
+      return false;
+    }
+    if (!formData.jobTitle.trim()) {
+      toast.error("Job title is required");
+      return false;
+    }
+    if (!formData.companySize) {
+      toast.error("Company size is required");
+      return false;
+    }
+    if (!formData.industry) {
+      toast.error("Industry is required");
+      return false;
+    }
+    if (!formData.mobileNumber.trim()) {
+      toast.error("Mobile number is required");
+      return false;
+    }
+    if (!formData.privacy) {
+      toast.error("Please agree to the Privacy Policy");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await apiFetch<{ message: string; success?: boolean }>(
+        DemoUrl.POST_REQUEST,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            companyName: formData.company,
+            companySize: formData.companySize,
+            industry: formData.industry,
+            additionalInformation: formData.message || "",
+            mobileNumber: formData.mobileNumber,
+          }),
+        }
+      );
+
+      toast.success(
+        response.message || "Thank you for your interest! We'll contact you within 24 hours.",
+        {
+          duration: 5000,
+          position: "top-right",
+        }
+      );
+
+      // Reset form
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        company: "",
+        jobTitle: "",
+        companySize: "",
+        industry: "",
+        message: "",
+        mobileNumber: "",
+        privacy: false,
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Failed to submit request. Please try again.";
+      
+      toast.error(errorMessage, {
+        duration: 5000,
+        position: "top-right",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30">
       {/* Hero Section */}
@@ -67,126 +206,188 @@ export default function Contact() {
               </div>
 
               <CardContent className="p-8 space-y-6">
-                <div className="grid gap-4 md:grid-cols-2">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName" className="text-slate-700 font-semibold">
+                        First Name *
+                      </Label>
+                      <Input 
+                        id="firstName" 
+                        placeholder="John" 
+                        value={formData.firstName}
+                        onChange={(e) => handleInputChange("firstName", e.target.value)}
+                        disabled={isSubmitting}
+                        className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName" className="text-slate-700 font-semibold">
+                        Last Name *
+                      </Label>
+                      <Input 
+                        id="lastName" 
+                        placeholder="Doe" 
+                        value={formData.lastName}
+                        onChange={(e) => handleInputChange("lastName", e.target.value)}
+                        disabled={isSubmitting}
+                        className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
+                      />
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-slate-700 font-semibold">
-                      First Name *
+                    <Label htmlFor="email" className="text-slate-700 font-semibold">
+                      Work Email *
                     </Label>
                     <Input 
-                      id="firstName" 
-                      placeholder="John" 
+                      id="email" 
+                      type="email" 
+                      placeholder="john.doe@company.com" 
+                      value={formData.email}
+                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      disabled={isSubmitting}
                       className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
                     />
                   </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-slate-700 font-semibold">
-                      Last Name *
+                    <Label htmlFor="mobileNumber" className="text-slate-700 font-semibold">
+                      Mobile Number *
                     </Label>
                     <Input 
-                      id="lastName" 
-                      placeholder="Doe" 
+                      id="mobileNumber" 
+                      type="tel" 
+                      placeholder="01123456789" 
+                      value={formData.mobileNumber}
+                      onChange={(e) => handleInputChange("mobileNumber", e.target.value)}
+                      disabled={isSubmitting}
                       className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
                     />
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-slate-700 font-semibold">
-                    Work Email *
-                  </Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="john.doe@company.com" 
-                    className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="company" className="text-slate-700 font-semibold">
-                    Company Name *
-                  </Label>
-                  <Input 
-                    id="company" 
-                    placeholder="Your Company Inc." 
-                    className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="jobTitle" className="text-slate-700 font-semibold">
-                    Job Title *
-                  </Label>
-                  <Input 
-                    id="jobTitle" 
-                    placeholder="IT Manager, Security Officer, etc." 
-                    className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
-                  />
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="companySize" className="text-slate-700 font-semibold">
-                      Company Size *
+                    <Label htmlFor="company" className="text-slate-700 font-semibold">
+                      Company Name *
                     </Label>
-                    <Select>
-                      <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12">
-                        <SelectValue placeholder="Select size" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1-50">1-50 employees</SelectItem>
-                        <SelectItem value="51-200">51-200 employees</SelectItem>
-                        <SelectItem value="201-500">201-500 employees</SelectItem>
-                        <SelectItem value="501-1000">501-1000 employees</SelectItem>
-                        <SelectItem value="1000+">1000+ employees</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input 
+                      id="company" 
+                      placeholder="Your Company Inc." 
+                      value={formData.company}
+                      onChange={(e) => handleInputChange("company", e.target.value)}
+                      disabled={isSubmitting}
+                      className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
+                    />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="industry" className="text-slate-700 font-semibold">
-                      Industry *
+                    <Label htmlFor="jobTitle" className="text-slate-700 font-semibold">
+                      Job Title *
                     </Label>
-                    <Select>
-                      <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12">
-                        <SelectValue placeholder="Select industry" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="technology">Technology</SelectItem>
-                        <SelectItem value="healthcare">Healthcare</SelectItem>
-                        <SelectItem value="finance">Finance & Banking</SelectItem>
-                        <SelectItem value="manufacturing">Manufacturing</SelectItem>
-                        <SelectItem value="retail">Retail</SelectItem>
-                        <SelectItem value="education">Education</SelectItem>
-                        <SelectItem value="government">Government</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input 
+                      id="jobTitle" 
+                      placeholder="IT Manager, Security Officer, etc." 
+                      value={formData.jobTitle}
+                      onChange={(e) => handleInputChange("jobTitle", e.target.value)}
+                      disabled={isSubmitting}
+                      className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12 transition-all" 
+                    />
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-slate-700 font-semibold">
-                    Additional Information
-                  </Label>
-                  <Textarea 
-                    id="message" 
-                    placeholder="Tell us about your current security training needs, compliance requirements, or any specific concerns..."
-                    className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 min-h-[120px] resize-none transition-all" 
-                  />
-                </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="companySize" className="text-slate-700 font-semibold">
+                        Company Size *
+                      </Label>
+                      <Select 
+                        value={formData.companySize} 
+                        onValueChange={(value) => handleInputChange("companySize", value)}
+                        disabled={isSubmitting}
+                      >
+                        <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12">
+                          <SelectValue placeholder="Select size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1-50">1-50 employees</SelectItem>
+                          <SelectItem value="51-200">51-200 employees</SelectItem>
+                          <SelectItem value="201-500">201-500 employees</SelectItem>
+                          <SelectItem value="501-1000">501-1000 employees</SelectItem>
+                          <SelectItem value="1000+">1000+ employees</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                <div className="flex items-start space-x-3 p-4 rounded-lg bg-slate-50 border border-slate-200">
-                  <Checkbox id="privacy" className="mt-1" />
-                  <Label htmlFor="privacy" className="text-sm text-slate-600 leading-relaxed cursor-pointer">
-                    I agree to the <a href="#" className="text-blue-600 hover:underline font-semibold">Privacy Policy</a> and consent to being contacted about SECURESIST.
-                  </Label>
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="industry" className="text-slate-700 font-semibold">
+                        Industry *
+                      </Label>
+                      <Select 
+                        value={formData.industry} 
+                        onValueChange={(value) => handleInputChange("industry", value)}
+                        disabled={isSubmitting}
+                      >
+                        <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-12">
+                          <SelectValue placeholder="Select industry" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="technology">Technology</SelectItem>
+                          <SelectItem value="healthcare">Healthcare</SelectItem>
+                          <SelectItem value="finance">Finance & Banking</SelectItem>
+                          <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                          <SelectItem value="retail">Retail</SelectItem>
+                          <SelectItem value="education">Education</SelectItem>
+                          <SelectItem value="government">Government</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
-                <Button className="w-full group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-6 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-                  <span>Request Demo</span>
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Button>
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-slate-700 font-semibold">
+                      Additional Information
+                    </Label>
+                    <Textarea 
+                      id="message" 
+                      placeholder="Tell us about your current security training needs, compliance requirements, or any specific concerns..."
+                      value={formData.message}
+                      onChange={(e) => handleInputChange("message", e.target.value)}
+                      disabled={isSubmitting}
+                      className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 min-h-[120px] resize-none transition-all" 
+                    />
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-4 rounded-lg bg-slate-50 border border-slate-200">
+                    <Checkbox 
+                      id="privacy" 
+                      checked={formData.privacy}
+                      onCheckedChange={(checked) => handleInputChange("privacy", checked === true)}
+                      disabled={isSubmitting}
+                      className="mt-1" 
+                    />
+                    <Label htmlFor="privacy" className="text-sm text-slate-600 leading-relaxed cursor-pointer">
+                      I agree to the <a href="#" className="text-blue-600 hover:underline font-semibold">Privacy Policy</a> and consent to being contacted about SECURESIST.
+                    </Label>
+                  </div>
+
+                  <Button 
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-6 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        <span>Submitting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Request Demo</span>
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      </>
+                    )}
+                  </Button>
+                </form>
               </CardContent>
             </Card>
              {/* Trust Badge */}

@@ -40,6 +40,9 @@ export const parseUrl = {
     POST_REQUEST: `${baseUrl}/partner`,
     GET_LOGOS: `${baseUrl}/partner`,
 }
+export const DemoUrl = {
+  POST_REQUEST: `${baseUrl}/demo`,
+}
 
 // use in get
 //   export default async function Page() {
