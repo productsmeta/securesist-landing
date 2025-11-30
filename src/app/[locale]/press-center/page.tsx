@@ -1,82 +1,59 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SectionHeader } from "@/components/SectionHeader";
-import { BookOpen, Calendar, Clock, ArrowRight, User } from "lucide-react";
+import { BookOpen, Calendar, Clock, ArrowRight, User, Loader2 } from "lucide-react";
+import { apiFetch } from "@/helpers/apiConfig";
+import { BlogsUrl } from "@/helpers/apiConfig";
 
-// Blog posts data
-const blogPosts = [
-  {
-    slug: "meta-techs-launches-securesist",
-    title: "Meta Techs Launches SECURESIST to Reduce Human Risk",
-    excerpt: "A people-first cybersecurity awareness platform built to turn employees into active defenders of your organization's security.",
-    date: "2025-02-10",
-    readTime: "5 min read",
-    author: "Meta Techs Team",
-    category: "Announcement",
-    image: "/contact_us.jpg",
-    featured: true,
-  },
-  {
-    slug: "build-security-culture-90-days",
-    title: "5 Practical Ways to Build a Security Culture in 90 Days",
-    excerpt: "From role-based training to adaptive phishing simulations, here's how teams move the needle quickly and effectively.",
-    date: "2025-01-28",
-    readTime: "8 min read",
-    author: "Sarah Johnson",
-    category: "Best Practices",
-    image: "/contact_us.jpg",
-    featured: false,
-  },
-  {
-    slug: "compliance-ready-reporting",
-    title: "Compliance-Ready Reporting: What Auditors Want to See",
-    excerpt: "Map training outcomes to frameworks and simplify evidence collection with clear, comprehensive dashboards.",
-    date: "2025-01-12",
-    readTime: "6 min read",
-    author: "Michael Chen",
-    category: "Compliance",
-    image: "/contact_us.jpg",
-    featured: false,
-  },
-  {
-    slug: "partner-spotlight-securesist",
-    title: "Partner Spotlight: Accelerating Outcomes with SECURESIST",
-    excerpt: "How service partners attach awareness programs to risk assessments and vCISO offerings for maximum impact.",
-    date: "2024-12-19",
-    readTime: "7 min read",
-    author: "David Martinez",
-    category: "Partners",
-    image: "/contact_us.jpg",
-    featured: false,
-  },
-  {
-    slug: "phishing-simulation-best-practices",
-    title: "Phishing Simulation Best Practices: A Complete Guide",
-    excerpt: "Learn how to design effective phishing campaigns that educate without overwhelming your employees.",
-    date: "2024-12-05",
-    readTime: "10 min read",
-    author: "Emily Rodriguez",
-    category: "Training",
-    image: "/contact_us.jpg",
-    featured: false,
-  },
-  {
-    slug: "measuring-security-awareness-roi",
-    title: "Measuring Security Awareness ROI: Key Metrics That Matter",
-    excerpt: "Discover the metrics that truly matter when evaluating the success of your cybersecurity training program.",
-    date: "2024-11-20",
-    readTime: "9 min read",
-    author: "James Wilson",
-    category: "Analytics",
-    image: "/contact_us.jpg",
-    featured: false,
-  },
-];
+// API Response Types
+interface BlogAuthor {
+  name: string;
+}
+
+interface BlogPost {
+  _id: string;
+  author: BlogAuthor;
+  title: string;
+  slug: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+  coverImage: string | null;
+  content: string;
+  category: string;
+  tags: string[];
+  readingTime: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface BlogsResponse {
+  status: string;
+  count: number;
+  total: number;
+  data: BlogPost[];
+  message: string;
+}
+
+// Component Blog Post Type
+interface ComponentBlogPost {
+  _id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  readTime: string;
+  author: string;
+  category: string;
+  image: string;
+  featured: boolean;
+}
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString(undefined, {
@@ -93,13 +70,70 @@ const getCategoryColor = (category: string) => {
     Partners: "bg-orange-100 text-orange-700 border-orange-200",
     Training: "bg-cyan-100 text-cyan-700 border-cyan-200",
     Analytics: "bg-pink-100 text-pink-700 border-pink-200",
+    Business: "bg-indigo-100 text-indigo-700 border-indigo-200",
   };
   return colors[category] || "bg-slate-100 text-slate-700 border-slate-200";
 };
 
+// Helper to check if URL is a video
+const isVideoUrl = (url: string | null): boolean => {
+  if (!url) return false;
+  return url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm') || url.toLowerCase().endsWith('.mov') || url.includes('/video/');
+};
+
 export default function BlogPage() {
+  const {
+    data: blogPosts = [],
+    isLoading: loading,
+    error: queryError,
+  } = useQuery<ComponentBlogPost[]>({
+    queryKey: ["blogs"],
+    queryFn: async () => {
+      const response = await apiFetch<BlogsResponse>(BlogsUrl.GET_ALL_BLOGS);
+      
+      if (response.status === "success" && response.data) {
+        return response.data.map((post, index) => ({
+          _id: post._id,
+          slug: post.slug,
+          title: post.title,
+          excerpt: post.metaDescription || post.content.substring(0, 150) + "...",
+          date: post.createdAt,
+          readTime: `${post.readingTime} min read`,
+          author: post.author.name,
+          category: post.category,
+          image: post.coverImage || "/contact_us.jpg",
+          featured: index === 0, // First post is featured
+        }));
+      }
+      return [];
+    },
+  });
+
+  const error = queryError instanceof Error ? queryError.message : queryError ? "Failed to load blogs" : null;
   const featuredPost = blogPosts.find((post) => post.featured);
   const regularPosts = blogPosts.filter((post) => !post.featured);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-slate-600">Loading blogs...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30">
@@ -129,15 +163,26 @@ export default function BlogPage() {
               <Card className="overflow-hidden border-0 bg-white shadow-2xl hover:shadow-3xl transition-shadow duration-300">
                 <div className="grid gap-0 md:grid-cols-2">
                   <div className="relative h-[300px] md:h-full min-h-[400px]">
-                    <Image
-                      src={featuredPost.image}
-                      alt={featuredPost.title}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      className="transition-transform duration-700 hover:scale-110"
-                      priority
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
+                    {isVideoUrl(featuredPost.image) ? (
+                      <video
+                        src={featuredPost.image}
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <Image
+                        src={featuredPost.image}
+                        alt={featuredPost.title}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        className="transition-transform duration-700 hover:scale-110"
+                        priority
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   </div>
                   <div className="p-8 md:p-12 flex flex-col justify-center">
@@ -193,18 +238,29 @@ export default function BlogPage() {
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {regularPosts.map((post) => (
                 <Card
-                  key={post.slug}
+                  key={post._id}
                   className="group border-0 bg-white shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
                 >
                   <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      className="transition-transform duration-700 group-hover:scale-110"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
+                    {isVideoUrl(post.image) ? (
+                      <video
+                        src={post.image}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        className="transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    )}
                     <div className="absolute top-4 left-4">
                       <Badge variant="outline" className={getCategoryColor(post.category)}>
                         {post.category}

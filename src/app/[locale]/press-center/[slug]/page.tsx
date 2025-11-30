@@ -1,14 +1,43 @@
 "use client";
 
 import { use } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, Clock, User, Share2, BookOpen } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, User, Share2, BookOpen, Loader2 } from "lucide-react";
+import { apiFetch } from "@/helpers/apiConfig";
+import { BlogsUrl } from "@/helpers/apiConfig";
 
-// This would normally come from a CMS or API
-const getBlogPost = (slug: string) => {
+// API Response Types
+interface BlogAuthor {
+  name: string;
+}
+
+interface BlogPostResponse {
+  status: string;
+  data: {
+    _id: string;
+    author: BlogAuthor;
+    title: string;
+    slug: string;
+    metaTitle: string;
+    metaDescription: string;
+    keywords: string[];
+    coverImage: string | null;
+    content: string;
+    category: string;
+    tags: string[];
+    readingTime: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+  message: string;
+}
+
+// Legacy hardcoded posts (kept as fallback, but not used)
+const getBlogPostLegacy = (slug: string) => {
   const posts: Record<string, any> = {
     "meta-techs-launches-securesist": {
       slug: "meta-techs-launches-securesist",
@@ -359,20 +388,71 @@ const getCategoryColor = (category: string) => {
     Partners: "bg-orange-100 text-orange-700 border-orange-200",
     Training: "bg-cyan-100 text-cyan-700 border-cyan-200",
     Analytics: "bg-pink-100 text-pink-700 border-pink-200",
+    Business: "bg-indigo-100 text-indigo-700 border-indigo-200",
   };
   return colors[category] || "bg-slate-100 text-slate-700 border-slate-200";
 };
 
+// Helper to check if URL is a video
+const isVideoUrl = (url: string | null): boolean => {
+  if (!url) return false;
+  return url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm') || url.toLowerCase().endsWith('.mov') || url.includes('/video/');
+};
+
+// Helper to format plain text content as HTML paragraphs
+const formatContentAsHtml = (content: string): string => {
+  if (!content) return '';
+  
+  // Check if content already contains HTML tags
+  if (content.includes('<') && content.includes('>')) {
+    return content;
+  }
+  
+  // Split by double newlines to create paragraphs
+  const paragraphs = content.split(/\n\s*\n/).filter(p => p.trim());
+  
+  // Wrap each paragraph in <p> tags
+  return paragraphs.map(p => `<p>${p.trim().replace(/\n/g, '<br />')}</p>`).join('');
+};
+
 export default function BlogPostPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug } = use(params);
-  const post = getBlogPost(slug);
+  
+  const {
+    data: post,
+    isLoading: loading,
+    error: queryError,
+  } = useQuery<BlogPostResponse["data"]>({
+    queryKey: ["blog", slug],
+    queryFn: async () => {
+      const response = await apiFetch<BlogPostResponse>(BlogsUrl.GET_BLOG_BY_SLUG(slug));
+      
+      if (response.status === "success" && response.data) {
+        return response.data;
+      }
+      throw new Error("Blog post not found");
+    },
+  });
 
-  if (!post) {
+  const error = queryError instanceof Error ? queryError.message : queryError ? "Failed to load blog post" : null;
+
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-slate-600">Loading blog post...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !post) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">Post Not Found</h1>
-          <p className="text-slate-600 mb-8">The blog post you're looking for doesn't exist.</p>
+          <p className="text-slate-600 mb-8">{error || "The blog post you're looking for doesn't exist."}</p>
           <Button asChild>
             <Link href="/press-center">Back to Blog</Link>
           </Button>
@@ -383,13 +463,39 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Back Navigation */}
-      <section className="border-b border-slate-200 bg-slate-50/50">
-        <div className="container mx-auto px-4 py-4">
+      {/* Hero Image/Video */}
+      <section className="relative h-[400px] md:h-[500px] overflow-hidden">
+        {post.coverImage ? (
+          isVideoUrl(post.coverImage) ? (
+            <video
+              src={post.coverImage}
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          ) : (
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              style={{ objectFit: "cover" }}
+              priority
+              sizes="100vw"
+            />
+          )
+        ) : (
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-500 to-purple-600" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        
+        {/* Back Button Overlay */}
+        <div className="absolute top-4 left-4 md:top-6 md:left-6 z-10">
           <Button
             asChild
-            variant="ghost"
-            className="text-slate-600 hover:text-slate-900"
+            variant="secondary"
+            className="bg-white/90 hover:bg-white text-slate-900 backdrop-blur-sm shadow-lg"
           >
             <Link href="/press-center" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
@@ -397,19 +503,6 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
             </Link>
           </Button>
         </div>
-      </section>
-
-      {/* Hero Image */}
-      <section className="relative h-[400px] md:h-[500px] overflow-hidden">
-        <Image
-          src={post.image}
-          alt={post.title}
-          fill
-          style={{ objectFit: "cover" }}
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
           <div className="container mx-auto max-w-4xl">
             <Badge variant="outline" className={`mb-4 ${getCategoryColor(post.category)}`}>
@@ -419,7 +512,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
               {post.title}
             </h1>
             <p className="text-xl text-white/90 max-w-3xl">
-              {post.excerpt}
+              {post.metaDescription || post.content.substring(0, 150) + "..."}
             </p>
           </div>
         </div>
@@ -434,20 +527,32 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
               <div className="flex flex-wrap items-center gap-6 text-sm text-slate-600">
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  <span className="font-semibold">{post.author}</span>
-                  {post.authorRole && (
-                    <span className="text-slate-400">• {post.authorRole}</span>
-                  )}
+                  <span className="font-semibold">{post.author.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  {formatDate(post.date)}
+                  {formatDate(post.createdAt)}
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
-                  {post.readTime}
+                  {post.readingTime} min read
                 </div>
-                <Button variant="outline" size="sm" className="ml-auto">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="ml-auto"
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({
+                        title: post.title,
+                        text: post.metaDescription,
+                        url: window.location.href,
+                      });
+                    } else {
+                      navigator.clipboard.writeText(window.location.href);
+                    }
+                  }}
+                >
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </Button>
@@ -465,7 +570,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                 prose-li:text-slate-700 prose-li:mb-2
                 prose-a:text-blue-600 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
                 prose-strong:text-slate-900 prose-strong:font-bold"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: formatContentAsHtml(post.content) }}
             />
 
             {/* CTA Section */}

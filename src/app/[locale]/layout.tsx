@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import { ToasterClient } from "@/components/ToasterClient";
+import { QueryProvider } from "@/components/QueryProvider";
  
 import { messages } from "@/messages/messages";
 
@@ -49,17 +50,19 @@ export default async function LocaleLayout({
   const localeMessages = messages[locale as 'en' | 'ar'] || messages["en"];
 
   return (
-    <NextIntlClientProvider locale={locale} messages={localeMessages}>
-      <div
-        className={`${isArabic ? zainFont.variable : comfortaa.variable} ${
-          isArabic ? "font-zain" : "font-comfortaa"
-        } antialiased`}
-      >
-        <Navbar />
-        {children}
-        <Footer />
-        <ToasterClient />
-      </div>
-    </NextIntlClientProvider>
+    <QueryProvider>
+      <NextIntlClientProvider locale={locale} messages={localeMessages}>
+        <div
+          className={`${isArabic ? zainFont.variable : comfortaa.variable} ${
+            isArabic ? "font-zain" : "font-comfortaa"
+          } antialiased`}
+        >
+          <Navbar />
+          {children}
+          <Footer />
+          <ToasterClient />
+        </div>
+      </NextIntlClientProvider>
+    </QueryProvider>
   );
 }
