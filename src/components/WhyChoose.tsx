@@ -7,19 +7,66 @@ import {
   BarChart3, 
   Zap, 
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Package,
+  Activity,
+  Headphones
 } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
-import { useTranslations } from "next-intl";
 
-export const WhyChoose = memo(() => {
-  const t = useTranslations('whyChoose');
+interface WhyChooseData {
+  whyChooseSection_Title: string;
+  whyChooseSection_Subtitle: string;
+  whyChooseSection_Description: string;
+  whyChooseBenefit_Card1_Title: string;
+  whyChooseBenefit_Card1_Description: string;
+  whyChooseBenefit_Card1_CtaText: string;
+  whyChooseBenefit_Card1_Icon: string;
+  whyChooseBenefit_Card2_Title: string;
+  whyChooseBenefit_Card2_Description: string;
+  whyChooseBenefit_Card2_CtaText: string;
+  whyChooseBenefit_Card2_Icon: string;
+  whyChooseBenefit_Card3_Title: string;
+  whyChooseBenefit_Card3_Description: string;
+  whyChooseBenefit_Card3_CtaText: string;
+  whyChooseBenefit_Card3_Icon: string;
+  whyChooseBenefit_Card4_Title: string;
+  whyChooseBenefit_Card4_Description: string;
+  whyChooseBenefit_Card4_CtaText: string;
+  whyChooseBenefit_Card4_Icon: string;
+  statistic_Card1_Value: string;
+  statistic_Card1_Label: string;
+  statistic_Card2_Value: string;
+  statistic_Card2_Label: string;
+  statistic_Card3_Value: string;
+  statistic_Card3_Label: string;
+}
+
+interface WhyChooseProps {
+  data: WhyChooseData;
+}
+
+// Icon mapping
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  'fulfillment-icon': Package,
+  'tracking-icon': Activity,
+  'scalable-icon': Zap,
+  'support-icon': Headphones,
+  'users': Users,
+  'target': Target,
+  'barchart': BarChart3,
+};
+
+export const WhyChoose = memo(({ data }: WhyChooseProps) => {
+  const getIcon = (iconName: string) => {
+    return iconMap[iconName] || Users;
+  };
   
   const features = [
     {
-      icon: Users,
-      title: t('highEngagement.title'),
-      benefit: t('highEngagement.benefit'),
+      icon: getIcon(data.whyChooseBenefit_Card1_Icon),
+      title: data.whyChooseBenefit_Card1_Title,
+      benefit: data.whyChooseBenefit_Card1_Description,
       color: "blue",
       bgColor: "bg-blue-500/10",
       textColor: "text-blue-600",
@@ -27,9 +74,9 @@ export const WhyChoose = memo(() => {
       shadow: "shadow-blue-500/10"
     },
     {
-      icon: Target,
-      title: t('roleBased.title'),
-      benefit: t('roleBased.benefit'),
+      icon: getIcon(data.whyChooseBenefit_Card2_Icon),
+      title: data.whyChooseBenefit_Card2_Title,
+      benefit: data.whyChooseBenefit_Card2_Description,
       color: "purple",
       bgColor: "bg-purple-500/10",
       textColor: "text-purple-600",
@@ -37,9 +84,9 @@ export const WhyChoose = memo(() => {
       shadow: "shadow-purple-500/10"
     },
     {
-      icon: Zap,
-      title: t('automation.title'),
-      benefit: t('automation.benefit'),
+      icon: getIcon(data.whyChooseBenefit_Card3_Icon),
+      title: data.whyChooseBenefit_Card3_Title,
+      benefit: data.whyChooseBenefit_Card3_Description,
       color: "green",
       bgColor: "bg-green-500/10",
       textColor: "text-green-600",
@@ -47,9 +94,9 @@ export const WhyChoose = memo(() => {
       shadow: "shadow-green-500/10"
     },
     {
-      icon: BarChart3,
-      title: t('reporting.title'),
-      benefit: t('reporting.benefit'),
+      icon: getIcon(data.whyChooseBenefit_Card4_Icon),
+      title: data.whyChooseBenefit_Card4_Title,
+      benefit: data.whyChooseBenefit_Card4_Description,
       color: "orange",
       bgColor: "bg-orange-500/10",
       textColor: "text-orange-600",
@@ -71,12 +118,13 @@ export const WhyChoose = memo(() => {
       <div className="container mx-auto px-4 relative z-10">
         
           <SectionHeader
-          badgeText={t('badge')}
-          title={t('title')}
-          titleHighlight={t('titleHighlight')}
-          description={t('description')}
+          badgeText={data.whyChooseSection_Subtitle}
+          title={data.whyChooseSection_Title}
+          titleHighlight=""
+          description={data.whyChooseSection_Subtitle}
         />
-        
+         
+       
         {/* Features Grid (4 columns for small cards) */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"> 
           {features.map((feature, index) => {
@@ -104,7 +152,7 @@ export const WhyChoose = memo(() => {
                 
                 {/* Hover Arrow (Minimalist Indicator) */}
                 <div className={`mt-3 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${feature.textColor}`}>
-                    <span className="text-xs font-semibold">{t('explore')}</span>
+                    <span className="text-xs font-semibold">Explore</span>
                     <ArrowRight className="h-3 w-3 ml-1" />
                 </div>
               </div>
@@ -115,16 +163,16 @@ export const WhyChoose = memo(() => {
         {/* Bottom Stats - Simplified and Clean */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
-            <div className="text-4xl font-extrabold text-blue-600 mb-2">98%</div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">{t('stats.completionRate')}</div>
+            <div className="text-4xl font-extrabold text-blue-600 mb-2">{data.statistic_Card1_Value}</div>
+            <div className="text-xs uppercase tracking-wider text-slate-500">{data.statistic_Card1_Label}</div>
           </div>
           <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
-            <div className="text-4xl font-extrabold text-purple-600 mb-2">75%</div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">{t('stats.incidentReduction')}</div>
+            <div className="text-4xl font-extrabold text-purple-600 mb-2">{data.statistic_Card2_Value}</div>
+            <div className="text-xs uppercase tracking-wider text-slate-500">{data.statistic_Card2_Label}</div>
           </div>
           <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
-            <div className="text-4xl font-extrabold text-green-600 mb-2">5 Min</div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">{t('stats.avgDuration')}</div>
+            <div className="text-4xl font-extrabold text-green-600 mb-2">{data.statistic_Card3_Value}</div>
+            <div className="text-xs uppercase tracking-wider text-slate-500">{data.statistic_Card3_Label}</div>
           </div>
         </div>
       </div>

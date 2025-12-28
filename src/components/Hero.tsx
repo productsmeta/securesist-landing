@@ -1,14 +1,27 @@
 "use client";
 import { memo } from "react";
 import dynamic from "next/dynamic"; 
-import { useTranslations } from "next-intl";
 // Lazy load WorldMap as it's heavy with DottedMap dependency
 // Note: Client component will automatically only render on client side
 const WorldMap = dynamic(() => import("./ui/world-map").then(mod => ({ default: mod.WorldMap })), {
   loading: () => <div className="w-full aspect-[2/1] rounded-2xl animate-pulse" style={{ contain: "layout" }} />,
 });
 
-const text = " SECURESIST";
+interface HeroData {
+  hero_Title: string;
+  hero_Subtitle: string;
+  hero_Description: string;
+  trustIndicator1_Title: string;
+  trustIndicator1_Description: string;
+  trustIndicator2_Title: string;
+  trustIndicator2_Description: string;
+  trustIndicator3_Title: string;
+  trustIndicator3_Description: string;
+}
+
+interface HeroProps {
+  data: HeroData;
+}
 
 // Stable dots array - defined outside component to prevent recreation on every render
 const MAP_DOTS = [
@@ -42,9 +55,7 @@ const MAP_DOTS = [
   },
 ];
 
-export const Hero = memo(function Hero() {
-  const t = useTranslations('hero');
-  
+export const Hero = memo(function Hero({ data }: HeroProps) {
   return (
     <section className="relative py-20 h-[100%]  my-10 md:py-16 md:my-0 w-full overflow-hidden">
       <div className="relative  py-10 h-[100%]   md:py-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,31 +76,32 @@ export const Hero = memo(function Hero() {
                
                 {/* Main Heading */}
                 <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-              <span className="block  text-slate-800">
-                   {t('title')}
+                  <span className="block text-slate-800">
+                    {data.hero_Title}
                   </span>
                   <span className="block bg-gradient-to-r from-blue-600 via-purple-500 to-cyan-400 bg-clip-text text-transparent animate-gradient-x bg-[length:200%_auto]">
-                   {text}
+                    {data.hero_Subtitle}
                   </span>
                 </h1>
                 
-               
+                {/* Description */}
+                <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto">
+                  {data.hero_Description}
+                </p>
                 
-            
-
                 {/* Trust indicators */}
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-sm text-slate-600 dark:text-slate-400">
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                    <span>{t('trustedBy')}</span>
+                    <span>{data.trustIndicator1_Title}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-                    <span>{t('uptime')}</span>
+                    <span>{data.trustIndicator2_Title}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
-                    <span>{t('enterpriseGrade')}</span>
+                    <span>{data.trustIndicator3_Title}</span>
                   </div>
                 </div>
               </div>

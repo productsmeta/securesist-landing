@@ -1,55 +1,75 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { ArrowRight, Shield, Users, CheckCircle2, Zap, BarChart3 } from "lucide-react";
+import { ArrowRight, Shield, Users, CheckCircle2, Zap, BarChart3, Loader2 } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { apiFetch, LandingPageUrl } from "@/helpers/apiConfig";
+
+// API Response Types
+interface SolutionsPageData {
+  _id: string;
+  solutionSection_Title: string;
+  solutionSection_Description: string;
+  solutionSection_Benefits: string;
+  solutionSection_Cta_Text: string;
+  solutionSection_Cta_Link: string;
+  solutionSection_Cta_Type: string;
+}
+
+interface SolutionsPageResponse {
+  status: string;
+  data: SolutionsPageData;
+}
 
 export default function Solutions() {
-  const solutions = [
-    {
-      id: 1,
-      title: "Cybersecurity Awareness Training",
-      subtitle: "Empower Your Team with Knowledge",
-      description: "Transform your organization's security posture with our comprehensive, role-based cybersecurity training platform. Our interactive modules keep employees engaged while teaching them to recognize and respond to real-world threats.",
-      features: [
-        "Interactive 5-10 minute modules",
-        "Role-based content delivery",
-        "Gamified learning experience",
-        "Real-time progress tracking",
-        "Automated campaign scheduling",
-        "Compliance reporting"
-      ],
-      image: "/contact_us.jpg", // Replace with actual solution image
-      gradient: "from-blue-500 to-cyan-500",
-      bgGradient: "from-blue-50 to-cyan-50",
-      icon: Shield,
-      iconColor: "text-blue-600",
-      iconBg: "bg-blue-100"
+  const { data: solutionsData, isLoading, error } = useQuery<SolutionsPageData>({
+    queryKey: ["solutionsPage"],
+    queryFn: async () => {
+      const response = await apiFetch<SolutionsPageResponse>(LandingPageUrl.GET_KEY_SOLUTIONS_PAGE);
+      if (response.status === "success" && response.data) {
+        return response.data;
+      }
+      throw new Error("Failed to load solutions page data");
     },
-    {
-      id: 2,
-      title: "Phishing Simulation & Testing",
-      subtitle: "Test and Improve Your Defenses",
-      description: "Proactively identify vulnerabilities in your organization's security awareness through realistic phishing simulations. Our platform helps you test employee responses and provides detailed analytics to strengthen your human firewall.",
-      features: [
-        "Realistic phishing templates",
-        "Customizable campaign scenarios",
-        "Detailed click-through analytics",
-        "Automated remediation training",
-        "Risk scoring and reporting",
-        "Multi-vector attack simulation"
-      ],
-      image: "/contact_us.jpg", // Replace with actual solution image
-      gradient: "from-purple-500 to-pink-500",
-      bgGradient: "from-purple-50 to-pink-50",
-      icon: Users,
-      iconColor: "text-purple-600",
-      iconBg: "bg-purple-100",
-      reverse: true // Alternate layout
-    }
-  ];
+  });
+
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </main>
+    );
+  }
+
+  if (error || !solutionsData) {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-slate-600">Failed to load page content</p>
+      </main>
+    );
+  }
+
+  // Parse benefits string into array
+  const benefits = solutionsData.solutionSection_Benefits
+    ? solutionsData.solutionSection_Benefits.split(',').map(b => b.trim()).filter(Boolean)
+    : [];
+  // Create solution object from API data
+  const solution = {
+    id: 1,
+    title: solutionsData.solutionSection_Title,
+    subtitle: "",
+    description: solutionsData.solutionSection_Description,
+    features: benefits,
+    image: "/contact_us.jpg",
+    gradient: "from-blue-500 to-cyan-500",
+    bgGradient: "from-blue-50 to-cyan-50",
+    icon: Shield,
+    iconColor: "text-blue-600",
+    iconBg: "bg-blue-100"
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30">
@@ -59,9 +79,9 @@ export default function Solutions() {
         <div className="container mx-auto px-4 relative z-10">
           <SectionHeader
             badgeText="Our Solutions"
-            title="Comprehensive"
-            titleHighlight="Security Solutions"
-            description="Protect your organization with our cutting-edge cybersecurity training and simulation platforms designed for the modern workforce"
+            title={solutionsData.solutionSection_Title}
+            titleHighlight=""
+            description={solutionsData.solutionSection_Description}
           />
         </div>
       </section>
@@ -69,26 +89,19 @@ export default function Solutions() {
       {/* Solutions Section */}
       <section className="py-6 md:py-12">
         <div className="container mx-auto px-4">
-          {solutions.map((solution, index) => {
+          {(() => {
             const Icon = solution.icon;
-            const isReverse = solution.reverse;
             
             return (
               <div
                 key={solution.id}
-                className={`mb-24 md:mb-32 last:mb-0`}
+                className="mb-24 md:mb-32 last:mb-0"
               >
                 <div
-                  className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
-                    isReverse ? "lg:grid-flow-dense" : ""
-                  }`}
+                  className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
                 >
                   {/* Image Section */}
-                  <div
-                    className={`relative group ${
-                      isReverse ? "lg:col-start-2" : ""
-                    }`}
-                  >
+                  <div className="relative group">
                     <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
                       {/* Gradient Overlay */}
                       <div className={`absolute inset-0 bg-gradient-to-br ${solution.bgGradient} opacity-20 z-10`} />
@@ -101,7 +114,7 @@ export default function Solutions() {
                         style={{ objectFit: "cover" }}
                         className="transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, 50vw"
-                        priority={index === 0}
+                        priority
                       />
                       
                       {/* Decorative Elements */}
@@ -116,11 +129,7 @@ export default function Solutions() {
                   </div>
 
                   {/* Content Section */}
-                  <div
-                    className={`space-y-6 ${
-                      isReverse ? "lg:col-start-1 lg:row-start-1" : ""
-                    }`}
-                  >
+                  <div className="space-y-6">
                     {/* Badge */}
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-sm border border-slate-200 font-semibold shadow-sm">
                       <Zap className={`h-4 w-4 ${solution.iconColor}`} />
@@ -165,8 +174,8 @@ export default function Solutions() {
                         asChild
                         className={`group relative overflow-hidden bg-gradient-to-r ${solution.gradient} text-white font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
                       >
-                        <Link href="/contact" className="flex items-center gap-2">
-                          Learn More
+                        <Link href={solutionsData.solutionSection_Cta_Link || "/contact"} className="flex items-center gap-2">
+                          {solutionsData.solutionSection_Cta_Text || "Learn More"}
                           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                         </Link>
                       </Button>
@@ -175,7 +184,7 @@ export default function Solutions() {
                 </div>
               </div>
             );
-          })}
+          })()}
         </div>
       </section>
 

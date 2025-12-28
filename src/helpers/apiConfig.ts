@@ -61,6 +61,13 @@ export const BlogsUrl = {
   GET_BLOG_BY_SLUG: (slug: string) => `${baseUrl}/blog/${slug}`, 
 }
 
+export const LandingPageUrl = {
+  GET_HOME_PAGE: `${baseUrl}/homePage`,
+  GET_KEY_ABOUT_US_PAGE: `${baseUrl}/aboutusPage`,
+  GET_KEY_SOLUTIONS_PAGE: `${baseUrl}/solutionsPage`,
+
+}
+
 
 
 

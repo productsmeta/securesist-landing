@@ -1,58 +1,79 @@
 "use client";
 
 import { memo } from 'react';
-import { Users, Target, BarChart3, CheckCircle } from 'lucide-react';
+import { Users, Target, BarChart3, CheckCircle, Warehouse, Truck, TrendingUp } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
-import { useTranslations } from 'next-intl';
 
-export const KeyBenefits = memo(() => {
-  const t = useTranslations('keyBenefits');
+interface KeyBenefitsData {
+  keyBenefits_Title: string;
+  keyBenefits_Subtitle: string;
+  keyBenefits_Description: string;
+  keyBenefit_Card1_Title: string;
+  keyBenefit_Card1_Description: string;
+  keyBenefit_Card1_Features: string;
+  keyBenefit_Card1_Icon: string;
+  keyBenefit_Card2_Title: string;
+  keyBenefit_Card2_Description: string;
+  keyBenefit_Card2_Features: string;
+  keyBenefit_Card2_Icon: string;
+  keyBenefit_Card3_Title: string;
+  keyBenefit_Card3_Description: string;
+  keyBenefit_Card3_Features: string;
+  keyBenefit_Card3_Icon: string;
+}
+
+interface KeyBenefitsProps {
+  data: KeyBenefitsData;
+}
+
+// Icon mapping
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  'warehouse-icon': Warehouse,
+  'shipping-icon': Truck,
+  'analytics-icon': TrendingUp,
+  'users': Users,
+  'target': Target,
+  'barchart': BarChart3,
+};
+
+export const KeyBenefits = memo(({ data }: KeyBenefitsProps) => {
+  const getIcon = (iconName: string) => {
+    return iconMap[iconName] || Users;
+  };
   
   const benefits = [
     {
-      icon: Users,
-      title: t('understandableTraining.title'),
-      description: t('understandableTraining.description'),
+      icon: getIcon(data.keyBenefit_Card1_Icon),
+      title: data.keyBenefit_Card1_Title,
+      description: data.keyBenefit_Card1_Description,
       color: "blue",
       gradient: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-50 to-cyan-50",
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
-      features: [
-        t('understandableTraining.features.modules'),
-        t('understandableTraining.features.scenarios'),
-        t('understandableTraining.features.learning')
-      ]
+      features: data.keyBenefit_Card1_Features.split(',').map(f => f.trim())
     },
     {
-      icon: Target,
-      title: t('fitsEachRole.title'),
-      description: t('fitsEachRole.description'),
+      icon: getIcon(data.keyBenefit_Card2_Icon),
+      title: data.keyBenefit_Card2_Title,
+      description: data.keyBenefit_Card2_Description,
       color: "purple",
       gradient: "from-purple-500 to-pink-500",
       bgGradient: "from-purple-50 to-pink-50",
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
-      features: [
-        t('fitsEachRole.features.content'),
-        t('fitsEachRole.features.paths'),
-        t('fitsEachRole.features.specific')
-      ]
+      features: data.keyBenefit_Card2_Features.split(',').map(f => f.trim())
     },
     {
-      icon: BarChart3,
-      title: t('clearReports.title'),
-      description: t('clearReports.description'),
+      icon: getIcon(data.keyBenefit_Card3_Icon),
+      title: data.keyBenefit_Card3_Title,
+      description: data.keyBenefit_Card3_Description,
       color: "green",
       gradient: "from-green-500 to-emerald-500",
       bgGradient: "from-green-50 to-emerald-50",
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      features: [
-        t('clearReports.features.analytics'),
-        t('clearReports.features.assessment'),
-        t('clearReports.features.tracking')
-      ]
+      features: data.keyBenefit_Card3_Features.split(',').map(f => f.trim())
     }
   ];
 
@@ -62,11 +83,13 @@ export const KeyBenefits = memo(() => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <SectionHeader
-          badgeText={t('badge')}
-          title={t('title')}
-          titleHighlight={t('titleHighlight')}
-          description={t('description')}
+          badgeText={data.keyBenefits_Subtitle}
+          title={data.keyBenefits_Title}
+          titleHighlight=""
+          description={data.keyBenefits_Description}
         />
+        
+         
         
         {/* Benefits Grid */}
         <div className="grid gap-8 md:grid-cols-3 max-w-7xl mx-auto">
