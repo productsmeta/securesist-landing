@@ -130,6 +130,7 @@ export default function Contact() {
             industry: formData.industry,
             additionalInformation: formData.message || "",
             mobileNumber: formData.mobileNumber,
+            status: 'ONHOLD',
           }),
         }
       );

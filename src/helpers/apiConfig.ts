@@ -27,8 +27,36 @@ export async function apiFetch<T>(
       });
     
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: `API Error: ${res.status}` }));
-        throw new Error(errorData.message || `API Error: ${res.status}`);
+        let errorData: any;
+        try {
+          errorData = await res.json();
+        } catch {
+          errorData = { message: `API Error: ${res.status}` };
+        }
+        
+        // Handle different error response formats:
+        // 1. Direct error object with msg: { msg: "Invalid company size value", path: "companySize" }
+        // 2. Error object with message: { message: "Error message" }
+        // 3. Error array: [{ msg: "Error 1" }, { msg: "Error 2" }]
+        // 4. Nested errors: { errors: [{ msg: "Error" }] }
+        
+        let errorMessage = `API Error: ${res.status}`;
+        
+        if (errorData.msg) {
+          // Direct msg field
+          errorMessage = errorData.msg;
+        } else if (errorData.message) {
+          // Direct message field
+          errorMessage = errorData.message;
+        } else if (Array.isArray(errorData) && errorData.length > 0) {
+          // Array of errors - take first error's msg
+          errorMessage = errorData[0].msg || errorData[0].message || errorMessage;
+        } else if (errorData.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+          // Nested errors array
+          errorMessage = errorData.errors[0].msg || errorData.errors[0].message || errorMessage;
+        }
+        
+        throw new Error(errorMessage);
       }
     
       return res.json();
