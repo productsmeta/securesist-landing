@@ -10,6 +10,7 @@ import {
   Twitter, 
   Linkedin, 
   Instagram,
+  Youtube,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -27,10 +28,9 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: "https://www.facebook.com/securesist", label: "Facebook" },
-    { icon: Twitter, href: "https://www.twitter.com/securesist", label: "Twitter" },
-    { icon: Linkedin, href: "https://www.linkedin.com/company/securesist", label: "LinkedIn" },
-    { icon: Instagram, href: "https://www.instagram.com/securesist", label: "Instagram" },
+    { icon: Facebook, href: "https://www.facebook.com/people/SecureSist/61587328047197/", label: "Facebook" },
+    { icon: Instagram, href: "https://www.instagram.com/securesist/", label: "Instagram" },
+    { icon: Youtube, href: "https://www.youtube.com/@SecureSist", label: "Youtube" },
   ];
   
   return (
