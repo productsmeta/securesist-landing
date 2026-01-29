@@ -126,9 +126,14 @@
     "address": "UAE, Dubai - Egypt, USA"
   },
   "about": {
-    "badge": "About Meta Tech",
+    "badge": "About Us",
     "title": "About",
-    "titleHighlight": "Meta Tech",
+    "titleHighlight": "Us",
+    "pageHeroTitle": "About Us",
+    "pageIntro": "At SECURESIST, we believe cybersecurity starts with people. Technology matters, but real security is built when employees understand risks, make better decisions, and feel confident doing the right thing.",
+    "pagePlatform": "SECURESIST is an all-in-one cybersecurity awareness and insider risk platform designed to train, test, and understand employee behavior. We combine engaging, interactive awareness programs with realistic simulated attacks and clear behavioral insights, helping organizations reduce human risk and build a lasting security culture.",
+    "pageBalance": "We also know how hard it is to balance security, compliance, and productivity. That's why SECURESIST helps teams see what's really happening across their digital environments, without slowing people down or creating fear.",
+    "platformHeading": "Our Platform",
     "description": "At Meta Techs, we recognize that the greatest defense against cyber threats is your people. We are dedicated to providing the tools and knowledge necessary to transform every employee into an active defender.",
     "solution": {
       "title": "Our Solution:",
@@ -153,9 +158,9 @@
       }
     },
     "cta": {
-      "title": "Ready to Meet Your Cybersecurity Goals?",
-      "description": "Request a free demo and see the SECURESIST difference for yourself.",
-      "button": "Request a Demo"
+      "title": "Ready to Get Started?",
+      "description": "Join hundreds of organizations that trust SECURESIST for their cybersecurity training needs.",
+      "button": "Contact Us"
     }
   },
   "solutions": {
