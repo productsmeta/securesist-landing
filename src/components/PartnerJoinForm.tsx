@@ -1,11 +1,18 @@
 "use client"
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { ArrowRight, CheckCircle, Users, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Image from "next/image";
 import { apiFetch, parseUrl } from "@/helpers/apiConfig";
 import toast from "react-hot-toast";
@@ -16,6 +23,7 @@ import {
   type FormErrors,
   type PartnerFormData,
 } from "@/helpers/validation";
+import { getCountries, getCitiesForCountry } from "@/helpers/countriesAndCities";
 
 const PartnerJoinForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +38,19 @@ const PartnerJoinForm = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [availableCities, setAvailableCities] = useState<string[]>([]);
+  const [countries] = useState<string[]>(getCountries());
+  const [countrySelectOpen, setCountrySelectOpen] = useState(false);
+  const [citySelectOpen, setCitySelectOpen] = useState(false);
+
+  // Update available cities when country changes
+  useEffect(() => {
+    if (formData.country) {
+      setAvailableCities(getCitiesForCountry(formData.country));
+    } else {
+      setAvailableCities([]);
+    }
+  }, [formData.country]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -67,6 +88,47 @@ const PartnerJoinForm = () => {
     }
   };
 
+  const handleSelectChange = (field: string, value: string) => {
+    setFormData((prev) => {
+      const newData = { ...prev, [field]: value };
+      
+      // If country changes, update available cities and reset city
+      if (field === 'country') {
+        newData.city = ''; // Reset city when country changes
+      }
+      
+      return newData;
+    });
+
+    // Mark field as touched
+    if (!touched[field]) {
+      setTouched((prev) => ({ ...prev, [field]: true }));
+    }
+
+    // Clear error
+    if (errors[field as keyof FormErrors]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field as keyof FormErrors];
+        return newErrors;
+      });
+    }
+
+    // Real-time validation if field is touched
+    if (touched[field]) {
+      const error = validateField(field, value);
+      if (error) {
+        setErrors((prev) => ({ ...prev, [field]: error }));
+      } else {
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors[field as keyof FormErrors];
+          return newErrors;
+        });
+      }
+    }
+  };
+
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setTouched((prev) => ({ ...prev, [id]: true }));
@@ -98,7 +160,6 @@ const PartnerJoinForm = () => {
     
     // If form is invalid, prevent submission and scroll to first error
     if (!isValid) {
-      // Use requestAnimationFrame to batch DOM reads/writes and avoid forced reflow
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           // Find first error field and scroll to it
@@ -106,10 +167,8 @@ const PartnerJoinForm = () => {
           if (firstErrorField) {
             const errorElement = document.getElementById(firstErrorField);
             if (errorElement) {
-              // Use requestAnimationFrame before scroll to avoid forced reflow
               requestAnimationFrame(() => {
                 errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
-                // Small delay before focusing to ensure scroll completes
                 setTimeout(() => {
                   errorElement.focus();
                 }, 300);
@@ -167,6 +226,7 @@ const PartnerJoinForm = () => {
         city: "",
         country: "",
       });
+      setAvailableCities([]);
       setErrors({});
       setTouched({});
     } catch (error) {
@@ -253,7 +313,6 @@ const PartnerJoinForm = () => {
                       onChange={handleInputChange}
                       onBlur={handleBlur}
                       required
-                       
                     />
                     {(errors.email && touched.email) && (
                       <p className="text-sm text-red-600 mt-1">{errors.email}</p>
@@ -297,33 +356,65 @@ const PartnerJoinForm = () => {
 
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="city" className="text-slate-700">City *</Label>
-                      <Input 
-                        id="city" 
-                        placeholder="New York" 
-                        className={errors.city && touched.city ? "border-red-500 focus:ring-red-500" : "border-slate-200"}
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        onBlur={handleBlur}
-                        required
-                      />
-                      {(errors.city && touched.city) && (
-                        <p className="text-sm text-red-600 mt-1">{errors.city}</p>
+                      <Label htmlFor="country" className="text-slate-700">Country *</Label>
+                      <div 
+                        onBlur={() => setTouched(prev => ({ ...prev, country: true }))}
+                      >
+                        <Select
+                          value={formData.country}
+                          onValueChange={(value) => handleSelectChange('country', value)}
+                          onOpenChange={(open) => setCountrySelectOpen(open)}
+                        >
+                          <SelectTrigger 
+                            id="country"
+                            className={errors.country && touched.country ? "border-red-500 focus:ring-red-500" : "border-slate-200"}
+                          >
+                            <SelectValue placeholder="Select a country" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {countries.map((country) => (
+                              <SelectItem key={country} value={country}>
+                                {country}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      {(errors.country && touched.country) && (
+                        <p className="text-sm text-red-600 mt-1">{errors.country}</p>
                       )}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="country" className="text-slate-700">Country *</Label>
-                      <Input 
-                        id="country" 
-                        placeholder="United States" 
-                        className={errors.country && touched.country ? "border-red-500 focus:ring-red-500" : "border-slate-200"}
-                        value={formData.country}
-                        onChange={handleInputChange}
-                        onBlur={handleBlur}
-                        required
-                      />
-                      {(errors.country && touched.country) && (
-                        <p className="text-sm text-red-600 mt-1">{errors.country}</p>
+                      <Label htmlFor="city" className="text-slate-700">City *</Label>
+                      <div 
+                        onBlur={() => setTouched(prev => ({ ...prev, city: true }))}
+                      >
+                        <Select
+                          value={formData.city}
+                          onValueChange={(value) => handleSelectChange('city', value)}
+                          onOpenChange={(open) => setCitySelectOpen(open)}
+                          disabled={!formData.country}
+                        >
+                          <SelectTrigger 
+                            id="city"
+                            className={errors.city && touched.city ? "border-red-500 focus:ring-red-500" : "border-slate-200"}
+                          >
+                            <SelectValue placeholder={formData.country ? "Select a city" : "Select country first"} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableCities.map((city, index ) => (
+                              <SelectItem  key={`${city}-${index}`}  value={city}>
+                                {city}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      {(errors.city && touched.city) && (
+                        <p className="text-sm text-red-600 mt-1">{errors.city}</p>
+                      )}
+                      {!formData.country && (
+                        <p className="text-sm text-slate-500 mt-1">Please select a country first</p>
                       )}
                     </div>
                   </div>
@@ -389,4 +480,3 @@ const PartnerJoinForm = () => {
 };
 
 export default PartnerJoinForm;
-
