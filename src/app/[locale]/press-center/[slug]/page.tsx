@@ -6,7 +6,7 @@ import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, Clock, User, Loader2 } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Loader2 } from "lucide-react";
 import { apiFetch, BlogsUrl } from "@/helpers/apiConfig";
 import DOMPurify from "dompurify";
 
@@ -14,14 +14,15 @@ import DOMPurify from "dompurify";
    Types
 ======================= */
 interface BlogAuthor {
-  name: string;
+  name?: string;
+  [key: string]: unknown;
 }
 
 interface BlogPostResponse {
   status: string;
   data: {
     _id: string;
-    author: BlogAuthor;
+    author?: string | BlogAuthor | null;
     title: string;
     slug: string;
     metaTitle: string;
@@ -209,9 +210,6 @@ export default function BlogPostPage({
         <div className="max-w-4xl mx-auto px-4">
           {/* Meta */}
           <div className="flex gap-6 text-sm text-slate-600 mb-8">
-            <span className="flex items-center gap-2">
-              <User className="h-4 w-4" /> {post.author.name}
-            </span>
             <span className="flex items-center gap-2">
               <Calendar className="h-4 w-4" /> {formatDate(post.createdAt)}
             </span>

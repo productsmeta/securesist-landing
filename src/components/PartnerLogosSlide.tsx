@@ -76,33 +76,35 @@
 
 
 "use client";
+
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { parseUrl } from "@/helpers/apiConfig";
 
 export default function PartnerLogosSlide() {
-  const [emblaRef, emblaApi] = useEmblaCarousel(
+  const t = useTranslations("home");
+  const [emblaRef] = useEmblaCarousel(
     {
       loop: true,
       align: "center",
     },
     [Autoplay({ delay: 3000, stopOnInteraction: false })]
   );
-  const [logos, setLogos] = useState([]);
+  const [logos, setLogos] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  
-//  DOTO: Updated Get Data By Helper Function in apiCongig.ts
+
   useEffect(() => {
     async function fetchLogos() {
       try {
         const res = await fetch(`${parseUrl.GET_LOGOS}`);
         const data = await res.json();
-        const extracted = data?.data?.map((item: any) => item.avatar) || [];
-        setLogos(extracted);
-      } catch (error) {
-        console.error("Error fetching partners:", error);
+        const extracted = data?.data?.map((item: { avatar?: string }) => item.avatar) || [];
+        setLogos(Array.isArray(extracted) ? extracted.filter(Boolean) : []);
+      } catch {
+        setLogos([]);
       } finally {
         setLoading(false);
       }
@@ -110,15 +112,12 @@ export default function PartnerLogosSlide() {
     fetchLogos();
   }, []);
 
-  return (   
-    <div  className="py-10 bg-blue-50/40" >
+  return (
+    <div className="py-10 bg-blue-50/40">
       <h2 className="text-center text-xl font-medium uppercase tracking-wide text-slate-800 mb-8">
-        Trusted by teams and technology leaders</h2>
-      {loading ? (
-        <div className="text-center text-slate-500">Loading...</div>
-      ) : logos.length === 0 ? (
-        <div className="text-center text-slate-500">No partner logos found</div>
-      ) : (
+        {t("partners_heading")}
+      </h2>
+      {!loading && logos.length > 0 ? (
         <div ref={emblaRef} style={{ overflow: "hidden" }}>
           <div style={{ display: "flex" }}>
             {logos.map((logo, i) => (
@@ -134,7 +133,7 @@ export default function PartnerLogosSlide() {
               >
                 <Image
                   src={logo}
-                  alt={`Partner logo ${i}`}
+                  alt={`Partner logo ${i + 1}`}
                   width={150}
                   height={100}
                   style={{ objectFit: "contain" }}
@@ -143,7 +142,7 @@ export default function PartnerLogosSlide() {
             ))}
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

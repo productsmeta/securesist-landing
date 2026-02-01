@@ -1,114 +1,74 @@
 "use client";
 
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Hero } from "@/components/Hero";
 import { KeyBenefits } from "@/components/KeyBenefits";
 import { WhyChoose } from "@/components/WhyChoose";
 import CallToActionSplit from "@/components/CallToAction";
 import PartnerLogosSlide from "@/components/PartnerLogosSlide";
-import { apiFetch, LandingPageUrl } from "@/helpers/apiConfig";
-import { Loader2 } from "lucide-react";
-
-// Landing Page Data Types
-interface LandingPageData {
-  _id: string;
-  hero_Title: string;
-  hero_Subtitle: string;
-  hero_Description: string;
-  trustIndicator1_Title: string;
-  trustIndicator1_Description: string;
-  trustIndicator1_Icon: string;
-  trustIndicator2_Title: string;
-  trustIndicator2_Description: string;
-  trustIndicator2_Icon: string;
-  trustIndicator3_Title: string;
-  trustIndicator3_Description: string;
-  trustIndicator3_Icon: string;
-  whyChooseSection_Title: string;
-  whyChooseSection_Subtitle: string;
-  whyChooseSection_Description: string;
-  whyChooseBenefit_Card1_Title: string;
-  whyChooseBenefit_Card1_Description: string;
-  whyChooseBenefit_Card1_CtaText: string;
-  whyChooseBenefit_Card1_Icon: string;
-  whyChooseBenefit_Card2_Title: string;
-  whyChooseBenefit_Card2_Description: string;
-  whyChooseBenefit_Card2_CtaText: string;
-  whyChooseBenefit_Card2_Icon: string;
-  whyChooseBenefit_Card3_Title: string;
-  whyChooseBenefit_Card3_Description: string;
-  whyChooseBenefit_Card3_CtaText: string;
-  whyChooseBenefit_Card3_Icon: string;
-  whyChooseBenefit_Card4_Title: string;
-  whyChooseBenefit_Card4_Description: string;
-  whyChooseBenefit_Card4_CtaText: string;
-  whyChooseBenefit_Card4_Icon: string;
-  keyBenefits_Title: string;
-  keyBenefits_Subtitle: string;
-  keyBenefits_Description: string;
-  keyBenefit_Card1_Title: string;
-  keyBenefit_Card1_Description: string;
-  keyBenefit_Card1_Features: string;
-  keyBenefit_Card1_Icon: string;
-  keyBenefit_Card2_Title: string;
-  keyBenefit_Card2_Description: string;
-  keyBenefit_Card2_Features: string;
-  keyBenefit_Card2_Icon: string;
-  keyBenefit_Card3_Title: string;
-  keyBenefit_Card3_Description: string;
-  keyBenefit_Card3_Features: string;
-  keyBenefit_Card3_Icon: string;
-  statistic_Card1_Value: string;
-  statistic_Card1_Label: string;
-  statistic_Card1_Icon: string;
-  statistic_Card2_Value: string;
-  statistic_Card2_Label: string;
-  statistic_Card2_Icon: string;
-  statistic_Card3_Value: string;
-  statistic_Card3_Label: string;
-  statistic_Card3_Icon: string;
-}
-
-interface LandingPageResponse {
-  status: string;
-  data: LandingPageData;
-}
 
 export default function HomePage() {
-  const { data: landingData, isLoading, error } = useQuery<LandingPageData>({
-    queryKey: ["landingPage"],
-    queryFn: async () => {
-      const response = await apiFetch<LandingPageResponse>(LandingPageUrl.GET_HOME_PAGE);
-      if (response.status === "success" && response.data) {
-        return response.data;
-      }
-      throw new Error("Failed to load landing page data");
-    },
-  });
+  const t = useTranslations("home");
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
-
-  if (error || !landingData) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-slate-600">Failed to load page content</p>
-      </div>
-    );
-  }
+  const landingData = {
+    hero_Title: t("hero_Title"),
+    hero_Subtitle: t("hero_Subtitle"),
+    hero_Description: t("hero_Description"),
+    trustIndicator1_Title: t("trustIndicator1_Title"),
+    trustIndicator1_Description: "",
+    trustIndicator2_Title: t("trustIndicator2_Title"),
+    trustIndicator2_Description: "",
+    trustIndicator3_Title: t("trustIndicator3_Title"),
+    trustIndicator3_Description: "",
+    keyBenefits_Title: t("keyBenefits_Title"),
+    keyBenefits_Subtitle: t("keyBenefits_Subtitle"),
+    keyBenefits_Description: t("keyBenefits_Description"),
+    keyBenefit_Card1_Title: t("keyBenefit_Card1_Title"),
+    keyBenefit_Card1_Description: t("keyBenefit_Card1_Description"),
+    keyBenefit_Card1_Features: t("keyBenefit_Card1_Features"),
+    keyBenefit_Card1_Icon: t("keyBenefit_Card1_Icon"),
+    keyBenefit_Card2_Title: t("keyBenefit_Card2_Title"),
+    keyBenefit_Card2_Description: t("keyBenefit_Card2_Description"),
+    keyBenefit_Card2_Features: t("keyBenefit_Card2_Features"),
+    keyBenefit_Card2_Icon: t("keyBenefit_Card2_Icon"),
+    keyBenefit_Card3_Title: t("keyBenefit_Card3_Title"),
+    keyBenefit_Card3_Description: t("keyBenefit_Card3_Description"),
+    keyBenefit_Card3_Features: t("keyBenefit_Card3_Features"),
+    keyBenefit_Card3_Icon: t("keyBenefit_Card3_Icon"),
+    whyChooseSection_Title: t("whyChooseSection_Title"),
+    whyChooseSection_Subtitle: t("whyChooseSection_Subtitle"),
+    whyChooseSection_Description: t("whyChooseSection_Description"),
+    whyChooseBenefit_Card1_Title: t("whyChooseBenefit_Card1_Title"),
+    whyChooseBenefit_Card1_Description: t("whyChooseBenefit_Card1_Description"),
+    whyChooseBenefit_Card1_CtaText: t("whyChooseBenefit_Card1_CtaText"),
+    whyChooseBenefit_Card1_Icon: t("whyChooseBenefit_Card1_Icon"),
+    whyChooseBenefit_Card2_Title: t("whyChooseBenefit_Card2_Title"),
+    whyChooseBenefit_Card2_Description: t("whyChooseBenefit_Card2_Description"),
+    whyChooseBenefit_Card2_CtaText: t("whyChooseBenefit_Card2_CtaText"),
+    whyChooseBenefit_Card2_Icon: t("whyChooseBenefit_Card2_Icon"),
+    whyChooseBenefit_Card3_Title: t("whyChooseBenefit_Card3_Title"),
+    whyChooseBenefit_Card3_Description: t("whyChooseBenefit_Card3_Description"),
+    whyChooseBenefit_Card3_CtaText: t("whyChooseBenefit_Card3_CtaText"),
+    whyChooseBenefit_Card3_Icon: t("whyChooseBenefit_Card3_Icon"),
+    whyChooseBenefit_Card4_Title: t("whyChooseBenefit_Card4_Title"),
+    whyChooseBenefit_Card4_Description: t("whyChooseBenefit_Card4_Description"),
+    whyChooseBenefit_Card4_CtaText: t("whyChooseBenefit_Card4_CtaText"),
+    whyChooseBenefit_Card4_Icon: t("whyChooseBenefit_Card4_Icon"),
+    statistic_Card1_Value: t("statistic_Card1_Value"),
+    statistic_Card1_Label: t("statistic_Card1_Label"),
+    statistic_Card2_Value: t("statistic_Card2_Value"),
+    statistic_Card2_Label: t("statistic_Card2_Label"),
+    statistic_Card3_Value: t("statistic_Card3_Value"),
+    statistic_Card3_Label: t("statistic_Card3_Label"),
+  };
 
   return (
     <div className="min-h-screen bg-white">
       <Hero data={landingData} />
       <KeyBenefits data={landingData} />
       <WhyChoose data={landingData} />
-      <PartnerLogosSlide/>
+      <PartnerLogosSlide />
       <CallToActionSplit />
     </div>
   );

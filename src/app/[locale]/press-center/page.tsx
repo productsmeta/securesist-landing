@@ -7,18 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SectionHeader } from "@/components/SectionHeader";
-import { BookOpen, Calendar, Clock, ArrowRight, User, Loader2 } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Loader2 } from "lucide-react";
 import { apiFetch } from "@/helpers/apiConfig";
 import { BlogsUrl } from "@/helpers/apiConfig";
 
 // API Response Types
 interface BlogAuthor {
-  name: string;
+  name?: string;
+  [key: string]: unknown;
 }
 
 interface BlogPost {
   _id: string;
-  author: BlogAuthor;
+  author?: string | BlogAuthor | null;
   title: string;
   slug: string;
   metaTitle: string;
@@ -49,7 +50,6 @@ interface ComponentBlogPost {
   excerpt: string;
   date: string;
   readTime: string;
-  author: string;
   category: string;
   image: string;
   featured: boolean;
@@ -99,7 +99,6 @@ export default function BlogPage() {
           excerpt: post.metaDescription || post.content.substring(0, 150) + "...",
           date: post.createdAt,
           readTime: `${post.readingTime} min read`,
-          author: post.author.name,
           category: post.category,
           image: post.coverImage || "/contact_us.jpg",
           featured: index === 0, // First post is featured
@@ -205,10 +204,6 @@ export default function BlogPage() {
                     <CardDescription className="text-base mb-6">
                       {featuredPost.excerpt}
                     </CardDescription>
-                    <div className="flex items-center gap-2 mb-6 text-sm text-slate-600">
-                      <User className="h-4 w-4" />
-                      <span>{featuredPost.author}</span>
-                    </div>
                     <Button asChild className="group w-fit bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                       <Link href={`/press-center/${featuredPost.slug}`} className="flex items-center gap-2">
                         Read Full Article
@@ -286,11 +281,7 @@ export default function BlogPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <User className="h-4 w-4" />
-                        <span>{post.author}</span>
-                      </div>
+                    <div className="flex items-center justify-end">
                       <Button asChild variant="ghost" size="sm" className="group/btn">
                         <Link
                           href={`/press-center/${post.slug}`}
