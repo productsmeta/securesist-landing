@@ -126,7 +126,7 @@ export default function Solutions() {
             asChild
             className="group inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6 text-base font-semibold text-white shadow-md transition-all hover:scale-[1.02] hover:shadow-lg"
           >
-            <Link href="/contact">
+            <Link href="/en/contact">
               {t("cta.contactSales")}
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
