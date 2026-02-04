@@ -176,6 +176,8 @@ export default function BlogPostPage({
               fill
               className="object-cover"
               priority
+              sizes="100vw"
+              quality={90}
             />
           )
         ) : (
@@ -196,12 +198,11 @@ export default function BlogPostPage({
         <div className="absolute bottom-8 left-8 text-white max-w-3xl">
           <Badge
             variant="outline"
-            className={`mb-4 ${getCategoryColor(post.category)}`}
+            className={`mb-3 ${getCategoryColor(post.category)}`}
           >
             {post.category}
           </Badge>
-          <h1 className="text-4xl font-black mb-4">{post.title}</h1>
-          <p className="text-white/90">{post.metaDescription}</p>
+          <h1 className="text-4xl font-black">{post.title}</h1>
         </div>
       </section>
 
@@ -221,51 +222,60 @@ export default function BlogPostPage({
           {/* HTML Body */}
           <style dangerouslySetInnerHTML={{ __html: `
             .blog-content h1 {
-              font-size: 1.5rem;
+              font-size: 1.75rem;
               font-weight: 700;
-              margin-top: 2.5rem;
-              margin-bottom: 1rem;
+              margin-top: 0.75rem;
+              margin-bottom: 0.25rem;
               color: #0f172a;
             }
+            .blog-content h1:first-child { margin-top: 0; }
             .blog-content h2 {
-              font-size: 1.5rem;
+              font-size: 1.75rem;
               font-weight: 700;
-              margin-top: 2.5rem;
-              margin-bottom: 1rem;
+              margin-top: 0.75rem;
+              margin-bottom: 0.25rem;
               color: #0f172a;
             }
+            .blog-content h2:first-child { margin-top: 0; }
             .blog-content h3 {
+              font-size: 1.375rem;
+              font-weight: 600;
+              margin-top: 0.5rem;
+              margin-bottom: 0.25rem;
+              color: #0f172a;
+            }
+            .blog-content h3:first-child { margin-top: 0; }
+            .blog-content h4 {
               font-size: 1.25rem;
               font-weight: 600;
-              margin-top: 2rem;
-              margin-bottom: 1rem;
+              margin-top: 0.5rem;
+              margin-bottom: 0.25rem;
               color: #0f172a;
             }
-            .blog-content h4 {
-              font-size: 1.125rem;
-              font-weight: 600;
-              margin-top: 1.5rem;
-              margin-bottom: 0.75rem;
-              color: #0f172a;
-            }
+            .blog-content h4:first-child { margin-top: 0; }
             .blog-content p {
+              font-size: 1.0625rem;
               color: #334155;
-              line-height: 1.75;
-              margin-bottom: 1.5rem;
+              line-height: 1.7;
+              margin-bottom: 0.5rem;
             }
+            .blog-content p:last-child { margin-bottom: 0; }
             .blog-content ul {
               list-style-type: disc;
               margin-left: 1.5rem;
-              margin-bottom: 1.5rem;
+              margin-top: 0.25rem;
+              margin-bottom: 0.5rem;
             }
             .blog-content ol {
               list-style-type: decimal;
               margin-left: 1.5rem;
-              margin-bottom: 1.5rem;
+              margin-top: 0.25rem;
+              margin-bottom: 0.5rem;
             }
             .blog-content li {
+              font-size: 1.0625rem;
               color: #334155;
-              margin-bottom: 0.5rem;
+              margin-bottom: 0.125rem;
             }
             .blog-content a {
               color: #2563eb;
@@ -281,8 +291,8 @@ export default function BlogPostPage({
             }
             .blog-content img {
               border-radius: 0.5rem;
-              margin-top: 2rem;
-              margin-bottom: 2rem;
+              margin-top: 0.5rem;
+              margin-bottom: 0.5rem;
             }
           `}} />
           <div
