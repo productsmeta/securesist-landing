@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import { Users, Target, BarChart3, CheckCircle, Warehouse, Truck, TrendingUp, ArrowRight } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SectionHeader } from "./SectionHeader";
 
@@ -40,6 +40,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export const KeyBenefits = memo(({ data }: KeyBenefitsProps) => {
   const t = useTranslations("home");
+  const locale = useLocale();
+  const isRtl = locale === "ar";
+  const textAlign = isRtl ? "text-right" : "text-left";
   const getIcon = (iconName: string) => {
     return iconMap[iconName] || Users;
   };
@@ -134,9 +137,9 @@ export const KeyBenefits = memo(({ data }: KeyBenefitsProps) => {
                   </div>
                   
                   {/* Content */}
-                  <div className="relative p-8 space-y-4">
+                  <div className={`relative p-8 space-y-4 ${textAlign}`}>
                     {/* Icon */}
-                    <div className={`inline-flex items-center justify-center w-16 h-16 ${benefit.iconBg} rounded-full  group-hover:scale-110 transition-transform duration-500 `}>
+                    <div className={`inline-flex items-center justify-center w-16 h-16 ${benefit.iconBg} rounded-full  group-hover:scale-110 transition-transform duration-500`}>
                       <Icon className={`h-8 w-8 ${benefit.iconColor}`} />
                     </div>
                     
@@ -154,7 +157,7 @@ export const KeyBenefits = memo(({ data }: KeyBenefitsProps) => {
                     {benefit.features.length > 0 && (
                       <div className="space-y-2 pt-4 border-t border-slate-100">
                         {benefit.features.map((feature, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-sm text-slate-600 group-hover:text-slate-700 transition-colors">
+                          <div key={idx} className={`flex items-center gap-2 text-sm text-slate-600 group-hover:text-slate-700 transition-colors ${isRtl ? "flex-row-reverse" : ""}`}>
                             <CheckCircle className={`h-4 w-4 ${benefit.iconColor} flex-shrink-0`} />
                             <span>{feature}</span>
                           </div>
@@ -165,10 +168,10 @@ export const KeyBenefits = memo(({ data }: KeyBenefitsProps) => {
                     {/* Read more - visible on card hover */}
                     <Link
                       href="/press-center"
-                      className={`inline-flex items-center gap-1.5 text-sm font-medium ${benefit.iconColor} opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:underline mt-2`}
+                      className={`inline-flex items-center gap-1.5 text-sm font-medium ${benefit.iconColor} opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:underline mt-2 ${isRtl ? "flex-row-reverse" : ""}`}
                     >
                       {t("readMore")}
-                      <ArrowRight className="h-3.5 w-3.5" />
+                      <ArrowRight className={`h-3.5 w-3.5 ${isRtl ? "rotate-180" : ""}`} />
                     </Link>
                   </div>
                    
