@@ -23,48 +23,60 @@ const About = () => {
   const securityStages = [
     {
       icon: Shield,
-      title: "New Asset",
-      description: t("stages.newAsset") || "Newly registered domains and assets are monitored for potential security risks before they can be exploited.",
+      title: "New Training Campaign",
+      description:
+        t("stages.newTrainingCampaign") ||
+        "Launch and track new awareness campaigns (phishing, password hygiene, data handling) with targeted audiences and timelines. تتم مراقبة النطاقات والأصول المسجلة حديثاً للكشف عن مخاطر الأمان المحتملة قبل أن يتم استغلالها.",
       color: "blue",
       bgColor: "bg-blue-100",
       textColor: "text-blue-600"
     },
     {
-      icon: AlertTriangle,
-      title: "Breach",
-      description: t("stages.breach") || "Detect and respond to security breaches, data leaks, and unauthorized access attempts across your digital infrastructure.",
-      color: "red",
-      bgColor: "bg-red-100",
-      textColor: "text-red-600"
+      icon: Settings,
+      title: "Policy & Compliance",
+      description:
+        t("stages.policyCompliance") ||
+        "Manage policies, attestations, and required controls (ISO 27001, NIST, PCI DSS, NCA, etc.) to stay audit-ready. اكتشف الثغرات الأمنية الناتجة عن سوء تكوين DNS وبيانات الاعتماد المكشوفة والإعدادات الضعيفة عبر أصولك.",
+      color: "yellow",
+      bgColor: "bg-yellow-100",
+      textColor: "text-yellow-600" 
     },
     {
       icon: UserX,
-      title: "VIP Impersonation",
-      description: t("stages.vipImpersonation") || "Identify fake accounts and domains impersonating executives, brands, or trusted entities to prevent fraud.",
+      title: "Executive / VIP Protection",
+      description:
+        t("stages.executiveVIPProtection") ||
+        "Special training and controls for executives and high-risk roles to reduce BEC, impersonation, and fraud exposure. حدد الحسابات والنطاقات المزيفة التي تنتحل صفة المسؤولين التنفيذيين أو العلامات التجارية أو الجهات الموثوقة لمنع الاحتيال.",
       color: "orange",
       bgColor: "bg-orange-100",
       textColor: "text-orange-600"
     },
     {
+      icon: AlertTriangle,
+      title: "Phishing & Social Engineering",
+      description:
+        t("stages.phishingSocialEngineering") ||
+        "Run simulations and monitor user behavior to reduce click rates and improve reporting culture across the organization. اكتشف واستجب لخروقات الأمان وتسريب البيانات ومحاولات الوصول غير المصرح به عبر بنيتك التحتية الرقمية.",
+      color: "red",
+      bgColor: "bg-red-100",
+      textColor: "text-red-600"
+    },
+    {
       icon: Skull,
-      title: "Malicious",
-      description: t("stages.malicious") || "Track malicious domains, phishing sites, malware distribution, and other threats targeting your organization.",
+      title: "Risk & Control Gaps",
+      description:
+        t("stages.riskControlGaps") ||
+        "Identify gaps from assessments, control testing, and exceptions—then assign owners, actions, and due dates. تتبع النطاقات الضارة ومواقع التصيد الاحتيالي وتوزيع البرامج الضارة والتهديدات الأخرى التي تستهدف مؤسستك.",
       color: "purple",
       bgColor: "bg-purple-100",
       textColor: "text-purple-600"
     },
     {
-      icon: Settings,
-      title: "Misconfiguration",
-      description: t("stages.misconfiguration") || "Discover security gaps from DNS misconfigurations, exposed credentials, and vulnerable settings across your assets.",
-      color: "yellow",
-      bgColor: "bg-yellow-100",
-      textColor: "text-yellow-600"
-    },
-    {
       icon: Calendar,
-      title: "Domain Expired",
-      description: t("stages.domainExpired") || "Monitor expiring domains to prevent hijacking, loss of brand equity, and potential security vulnerabilities.",
+      title: "Audit Evidence & Reporting",
+      description:
+        t("stages.auditEvidenceReporting") ||
+        "Centralize evidence collection, generate compliance reports, and track remediation status for internal and external audits. راقب النطاقات منتهية الصلاحية لمنع الاختطاف وفقدان قيمة العلامة التجارية ونقاط الضعف الأمنية المحتملة.",
       color: "slate",
       bgColor: "bg-slate-100",
       textColor: "text-slate-600"
@@ -135,7 +147,7 @@ const About = () => {
 
       {/* CTA */}
       <section className="border-t border-slate-200 py-16 md:py-20">
-        <div className={`container mx-auto px-4 text-center ${textAlign}`}>
+        <div className={`container mx-auto px-4 text-center `}>
           <h2 className="mb-3 text-2xl font-bold text-slate-900 md:text-3xl">
             {t("cta.title") || "Ready to Secure Your Assets?"}
           </h2>

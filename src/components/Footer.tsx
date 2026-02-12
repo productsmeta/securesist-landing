@@ -31,6 +31,7 @@ const Footer = () => {
     { icon: Facebook, href: "https://www.facebook.com/people/SecureSist/61587328047197/", label: "Facebook" },
     { icon: Instagram, href: "https://www.instagram.com/securesist/", label: "Instagram" },
     { icon: Youtube, href: "https://www.youtube.com/@SecureSist", label: "Youtube" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/securesist/", label: "Linkedin" },
   ];
   
   return (

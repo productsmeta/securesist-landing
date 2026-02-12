@@ -14,14 +14,12 @@ export const SecurityRadar = memo(function SecurityRadar() {
   }, []);
 
   const alerts = [
-    { id: 1, label: "New Asset", angle: 80, distance: 40, color: "emerald", icon: Shield },
-    { id: 2, label: "Breach", angle: 30, distance: 40, color: "red", icon: AlertTriangle },
-    { id: 3, label: "VIP Impersonation", angle: 5, distance: 20, color: "rose", icon: UserX },
-    { id: 4, label: " Malicious ", angle: -35, distance: 36, color: "amber", icon: ShieldAlert  },
-    { id: 5, label: "Misconfiguration", angle: -70, distance: 42, color: "purple", icon: Settings },
-    { id: 6, label: "Domain Expired", angle: -105, distance: 25, color: "blue", icon: Globe },
-    { id: 7, label: "DMARC", angle: -140, distance: 43, color: "fuchsia", icon: Mail },
-    { id: 8, label: "Malware Alert", angle: 180, distance: 24, color: "rose", icon: Skull },
+    { id: 1, label: "New Training Campaign", angle: 80, distance: 40, color: "emerald", icon: Shield },
+    { id: 2, label: "Policy & Attestations", angle: 30, distance: 25, color: "red", icon: AlertTriangle },
+    { id: 3, label: "Executive / VIP Protection", angle: 160, distance: 20, color: "rose", icon: UserX },
+    { id: 4, label: "Phishing & Social Engineering", angle: -35, distance: 17, color: "amber", icon: ShieldAlert  },
+    { id: 5, label: "Risk & Control", angle: -70, distance: 42, color: "purple", icon: Settings },
+    { id: 6, label: "Audit Evidence", angle: -105, distance: 25, color: "blue", icon: Globe },
   ];
 
   const getPosition = (angle: number, distance: number) => {
@@ -141,7 +139,7 @@ export const SecurityRadar = memo(function SecurityRadar() {
         return (
           <div
             key={alert.id}
-            className={`absolute transition-all duration-500 ease-out ${
+            className={`absolute text-xs  transition-all duration-500 ease-out  ${
               hidden ? "opacity-0 scale-75 blur-sm" : "opacity-100 scale-100"
             }`}
             style={{
@@ -153,8 +151,8 @@ export const SecurityRadar = memo(function SecurityRadar() {
             <div
               className={`px-3 py-1.5 rounded-full border-2 text-xs font-semibold shadow-lg backdrop-blur-sm flex items-center gap-1.5 ${circleColors[alert.color]}`}
             >
-              <Icon className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{alert.label}</span>
+              <Icon className="w-3 h-3" />
+              <span className="hidden sm:inline text-[10px]">{alert.label}</span>
             </div>
           </div>
         );

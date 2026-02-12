@@ -213,12 +213,12 @@
       "button": "Contact Us"
     },
     "stages": {
-      "newAsset": "Newly registered domains and assets are monitored for potential security risks before they can be exploited.",
-      "breach": "Detect and respond to security breaches, data leaks, and unauthorized access attempts across your digital infrastructure.",
-      "vipImpersonation": "Identify fake accounts and domains impersonating executives, brands, or trusted entities to prevent fraud.",
-      "malicious": "Track malicious domains, phishing sites, malware distribution, and other threats targeting your organization.",
-      "misconfiguration": "Discover security gaps from DNS misconfigurations, exposed credentials, and vulnerable settings across your assets.",
-      "domainExpired": "Monitor expiring domains to prevent hijacking, loss of brand equity, and potential security vulnerabilities."
+      "newTrainingCampaign": "Launch and track new awareness campaigns (phishing, password hygiene, data handling) with targeted audiences and timelines.",
+      "policyCompliance": "Manage policies, attestations, and required controls (ISO 27001, NIST, PCI DSS, NCA, etc.) to stay audit-ready.",
+      "executiveVIPProtection": "Provide specialized training and controls for executives and high-risk roles to reduce BEC, impersonation, and fraud exposure.",
+      "phishingSocialEngineering": "Run simulations and monitor user behavior to reduce click rates and strengthen the reporting culture across the organization.",
+      "riskControlGaps": "Identify gaps from assessments, control testing, and exceptions, then assign owners, actions, and due dates.",
+      "auditEvidenceReporting": "Centralize evidence collection, generate compliance reports, and track remediation status for internal and external audits."
     },
     "howItWorks": {
       "title": "How It Works",
