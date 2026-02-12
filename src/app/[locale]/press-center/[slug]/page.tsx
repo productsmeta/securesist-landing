@@ -229,17 +229,18 @@ export default function BlogPostPage({
     line-height: 1.4;
   }
 
-  .blog-content h1:first-child { margin-top: 0; }
+  .blog-content h1:first-child { margin-top: 0;     color:rgb(0, 44, 140);}
 
   .blog-content h2 {
     font-size: 1.6rem;
     font-weight: 700;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+    color: #2563eb;
     line-height: 1.4;
   }
 
-  .blog-content h2:first-child { margin-top: 0; }
+  .blog-content h2:first-child { margin-top: 0;   }
 
   .blog-content h3 {
     font-size: 1.35rem;
