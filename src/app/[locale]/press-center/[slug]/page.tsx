@@ -4,6 +4,7 @@ import { BlogPostHero } from "@/components/blog/BlogPostHero";
 import { BlogPostMeta } from "@/components/blog/BlogPostMeta";
 import { BlogContent } from "@/components/blog/BlogContent";
 import { BlogPostCTA } from "@/components/blog/BlogPostCTA";
+import { ArticleSchema } from "@/components/blog/ArticleSchema";
 
 /* =======================
    Types
@@ -42,7 +43,7 @@ export default async function BlogPostPage({
 }: {
   params: Promise<{ slug: string; locale: string }>;
 }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
 
   let post: BlogPostResponse["data"] | null = null;
 
@@ -63,6 +64,15 @@ export default async function BlogPostPage({
 
   return (
     <main className="min-h-screen bg-white">
+      <ArticleSchema
+        title={post.title}
+        description={post.metaDescription || post.title}
+        slug={post.slug}
+        locale={locale}
+        image={post.coverImage}
+        datePublished={post.createdAt}
+        dateModified={post.updatedAt}
+      />
       <BlogPostHero
         coverImage={post.coverImage}
         title={post.title}
@@ -76,7 +86,7 @@ export default async function BlogPostPage({
             readingTime={post.readingTime}
           />
 
-          <BlogContent content={post.content} />
+          <BlogContent content={post.content} articleTitle={post.title} />
 
           <BlogPostCTA />
         </div>

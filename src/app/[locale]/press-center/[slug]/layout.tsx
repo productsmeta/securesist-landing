@@ -15,6 +15,7 @@ interface BlogPostResponse {
     metaDescription: string | null;
     keywords?: string[] | null;
     canonical_url?: string | null;
+    coverImage?: string | null;
   };
 }
 
@@ -38,8 +39,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       const canonical =
         response.data.canonical_url?.trim() ||
         `${siteUrl}/${locale}/press-center/${slug}`;
+      const rawImage = response.data.coverImage?.trim();
+      const ogImageUrl =
+        rawImage && (rawImage.startsWith("http") ? rawImage : `${siteUrl}${rawImage.startsWith("/") ? "" : "/"}${rawImage}`);
+      const fullTitle = `${title} | SECURESIST`;
+
       return {
-        title: `${title} | SECURESIST`,
+        title: fullTitle,
         description,
         keywords,
         robots: {
@@ -48,6 +54,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
         alternates: {
           canonical,
+        },
+        openGraph: {
+          type: "article",
+          title: fullTitle,
+          description,
+          url: canonical,
+          siteName: "SECURESIST",
+          ...(ogImageUrl && {
+            images: [
+              {
+                url: ogImageUrl,
+                width: 1200,
+                height: 630,
+                alt: title,
+              },
+            ],
+          }),
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: fullTitle,
+          description,
+          ...(ogImageUrl && { images: [ogImageUrl] }),
         },
       };
     }
