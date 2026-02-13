@@ -70,10 +70,7 @@ export default async function BlogPostPage({
             readingTime={Number(post.readingTime) || 0}
           />
 
-          <BlogContent
-            content={String(post.content ?? "")}
-            articleTitle={String(post.title ?? "")}
-          />
+          <BlogContent content={String(post.content ?? "")} />
 
           <BlogPostCTA />
         </div>

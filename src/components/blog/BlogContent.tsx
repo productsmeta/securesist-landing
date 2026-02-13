@@ -1,86 +1,14 @@
-import DOMPurify from "isomorphic-dompurify";
-
-const ALLOWED_TAGS = [
-  "h1", "h2", "h3", "h4", "h5", "h6",
-  "p", "br", "strong", "em", "u", "b", "i",
-  "ul", "ol", "li", "a", "img",
-  "blockquote", "code", "pre", "span", "div",
-];
-const ALLOWED_ATTR = ["href", "src", "alt", "title", "class", "style", "loading", "rel", "target"];
-
-function escapeHtmlAttr(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-/**
- * Ensures every <img> has meaningful alt and loading="lazy" for SEO and performance.
- * Uses articleTitle as default alt when alt is missing or empty.
- */
-function processImgTags(html: string, articleTitle: string): string {
-  try {
-  const defaultAlt = escapeHtmlAttr(String(articleTitle).trim() || "Article image");
-  return html.replace(
-    /<img\s([^>]*)>/gi,
-    (_match, attrs: string) => {
-      const altMatch = attrs.match(/\balt\s*=\s*["']([^"']*)["']/i) ?? attrs.match(/\balt\s*=\s*([^\s>]+)/i);
-      const hasMeaningfulAlt = altMatch && altMatch[1].trim().length > 0;
-      const hasLoading = /\bloading\s*=/i.test(attrs);
-      let out = attrs;
-      if (!hasMeaningfulAlt) {
-        // Remove empty or missing alt so we can add a proper one
-        out = out.replace(/\balt\s*=\s*["'][^"']*["']/gi, "").replace(/\balt\s*=\s*[^\s>]+/gi, "").trim();
-        out += ` alt="${defaultAlt}"`;
-      }
-      if (!hasLoading) out += ' loading="lazy"';
-      return `<img ${out.trim()}>`;
-    }
-  );
-  } catch {
-    return html;
-  }
-}
-
 interface BlogContentProps {
+  /** HTML from API — must be sanitized by the API before sending. */
   content: string;
-  /** Used as default alt for images that have no alt (accessibility + SEO). */
-  articleTitle?: string;
 }
 
 /**
- * Server-rendered blog body. Sanitization runs on the server so the full
- * HTML (including H1/H2, paragraphs) is in the initial response for SEO.
- * In-content images get default alt from articleTitle and loading="lazy".
- * Note: For best performance (Core Web Vitals), in-content images should use
- * URLs (e.g. Cloudinary) rather than base64 data URIs; base64 inflates HTML size.
+ * Renders blog body HTML. Sanitization must happen in the API (before response).
+ * Do not sanitize here: Edge/Cloudflare can throw 500 with DOMPurify/jsdom.
  */
-const MAX_CONTENT_LENGTH = 400_000;
-
-/** Remove script tags only; used as fallback if DOMPurify throws on server. */
-function stripScripts(html: string): string {
-  return html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-}
-
-export function BlogContent({ content, articleTitle = "" }: BlogContentProps) {
-  const rawContent = typeof content === "string" ? content : "";
-  const safeTitle = typeof articleTitle === "string" ? articleTitle : "";
-  const toSanitize = rawContent.trim().slice(0, MAX_CONTENT_LENGTH);
-
-  let cleanHtml = "";
-  try {
-    if (toSanitize) {
-      cleanHtml = DOMPurify.sanitize(toSanitize, {
-        ALLOWED_TAGS,
-        ALLOWED_ATTR,
-      });
-      cleanHtml = processImgTags(cleanHtml, safeTitle);
-    }
-  } catch {
-    cleanHtml = stripScripts(rawContent.trim().slice(0, MAX_CONTENT_LENGTH));
-  }
+export function BlogContent({ content }: BlogContentProps) {
+  const html = typeof content === "string" ? content : "";
 
   return (
     <>
@@ -152,7 +80,7 @@ export function BlogContent({ content, articleTitle = "" }: BlogContentProps) {
       />
       <div
         className="blog-content max-w-none mt-4"
-        dangerouslySetInnerHTML={{ __html: cleanHtml }}
+        dangerouslySetInnerHTML={{ __html: html }}
       />
     </>
   );
