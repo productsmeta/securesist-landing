@@ -4,6 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "SECURESIST - Cybersecurity Awareness Training",
   description: "Transform your organization's cybersecurity posture with intelligent, role-based training that keeps your team engaged and secure.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   verification: {
     google: "HHKif-Sg8xktnkDDA_n2i5Kx8v69f7uvCYRl3q56HdE",
   },

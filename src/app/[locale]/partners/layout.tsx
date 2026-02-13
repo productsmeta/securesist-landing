@@ -16,6 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: isAr
       ? "انضم إلى برنامج شركاء SECURESIST. ساعد العملاء على بناء ثقافة أمنية مرنة مع تدريب قائم على الأدوار ونتائج قابلة للقياس."
       : "Join the SECURESIST partner program. Help customers build resilient security cultures with role-based training, measurable outcomes, and trusted expertise.",
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: `${siteUrl}/${locale}/partners`,
     },

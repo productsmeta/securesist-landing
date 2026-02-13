@@ -16,6 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: isAr
       ? "آخر المقالات والأخبار عن الأمن السيبراني والتوعية والامتثال من فريق SECURESIST."
       : "Latest articles and news on cybersecurity, awareness, and compliance from the SECURESIST team.",
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: `${siteUrl}/${locale}/press-center`,
     },

@@ -16,6 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: isAr
       ? "اعرف المزيد عن SECURESIST وكيف نساعد المؤسسات على تقليل المخاطر السيبرانية البشرية من خلال التدريب والمحاكاة والرؤى السلوكية."
       : "Learn more about SECURESIST and how we help organizations reduce human cyber risk through training, simulations, and behavioral insights.",
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: `${siteUrl}/${locale}/about`,
     },

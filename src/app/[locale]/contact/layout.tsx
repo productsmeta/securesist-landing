@@ -16,6 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: isAr
       ? "احصل على عرض توضيحي مخصص لمنصة SECURESIST للتوعية بالأمن السيبراني. تواصل معنا خلال 24 ساعة."
       : "Get a personalized demo of the SECURESIST cybersecurity awareness platform. We respond within 24 hours.",
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: `${siteUrl}/${locale}/contact`,
     },

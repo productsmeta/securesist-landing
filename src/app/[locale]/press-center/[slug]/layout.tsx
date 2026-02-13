@@ -13,6 +13,7 @@ interface BlogPostResponse {
     title: string;
     metaTitle: string | null;
     metaDescription: string | null;
+    keywords?: string[] | null;
     canonical_url?: string | null;
   };
 }
@@ -31,12 +32,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       const description =
         response.data.metaDescription?.trim() ||
         "Read more on the SECURESIST blog.";
+      const keywords = response.data.keywords && response.data.keywords.length > 0
+        ? response.data.keywords
+        : undefined;
       const canonical =
         response.data.canonical_url?.trim() ||
         `${siteUrl}/${locale}/press-center/${slug}`;
       return {
         title: `${title} | SECURESIST`,
         description,
+        keywords,
+        robots: {
+          index: true,
+          follow: true,
+        },
         alternates: {
           canonical,
         },
@@ -48,6 +57,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: "SECURESIST | Blog",
     description: "Read articles and news from SECURESIST.",
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: `${siteUrl}/${locale}/press-center/${slug}`,
     },

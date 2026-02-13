@@ -27,6 +27,10 @@ export async function generateMetadata({
     description: isAr
       ? "حوّل وضع الأمن السيبراني لمؤسستك مع تدريب ذكي قائم على الأدوار يحافظ على تفاعل فريقك وأمانه."
       : "Transform your organization's cybersecurity posture with intelligent, role-based training that keeps your team engaged and secure.",
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: `${siteUrl}/${locale}`,
     },

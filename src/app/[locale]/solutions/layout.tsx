@@ -16,6 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: isAr
       ? "احمِ مؤسستك بمنصات التدريب والمحاكاة المتطورة للأمن السيبراني. تدريب توعية ومحاكاة التصيد الاحتيالي وقياس النتائج."
       : "Protect your organization with cutting-edge cybersecurity training and simulation platforms. Awareness training, phishing simulation, and measurable outcomes.",
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: `${siteUrl}/${locale}/solutions`,
     },
