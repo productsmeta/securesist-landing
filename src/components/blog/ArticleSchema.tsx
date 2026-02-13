@@ -5,7 +5,7 @@ interface ArticleSchemaProps {
   description: string;
   slug: string;
   locale: string;
-  image: string | null;
+  image: string | null | { url: string };
   datePublished: string;
   dateModified: string;
   authorName?: string;
@@ -25,13 +25,22 @@ export function ArticleSchema({
   authorName = "SECURESIST",
 }: ArticleSchemaProps) {
   const url = `${siteUrl}/${locale}/press-center/${slug}`;
-  const imageUrl = image?.startsWith("http") ? image : image ? `${siteUrl}${image}` : undefined;
+  const imageStr =
+    typeof image === "string"
+      ? image
+      : image && typeof image === "object" && "url" in image
+        ? String((image as { url: string }).url)
+        : "";
+  const imageUrl =
+    imageStr && (imageStr.startsWith("http") ? imageStr : `${siteUrl}${imageStr.startsWith("/") ? "" : "/"}${imageStr}`);
+
+  const safeDesc = typeof description === "string" ? description.replace(/\r?\n/g, " ").trim() : "";
 
   const schema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: title,
-    description: description.replace(/\r?\n/g, " ").trim(),
+    headline: typeof title === "string" ? title : "",
+    description: safeDesc,
     url,
     datePublished,
     dateModified,
@@ -47,7 +56,7 @@ export function ArticleSchema({
         url: `${siteUrl}/logo.png`,
       },
     },
-    ...(imageUrl && { image: imageUrl }),
+    ...(imageUrl ? { image: imageUrl } : {}),
   };
 
   return (

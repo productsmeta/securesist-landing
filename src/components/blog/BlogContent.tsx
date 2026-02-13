@@ -21,7 +21,8 @@ function escapeHtmlAttr(s: string): string {
  * Uses articleTitle as default alt when alt is missing or empty.
  */
 function processImgTags(html: string, articleTitle: string): string {
-  const defaultAlt = escapeHtmlAttr(articleTitle.trim() || "Article image");
+  try {
+  const defaultAlt = escapeHtmlAttr(String(articleTitle).trim() || "Article image");
   return html.replace(
     /<img\s([^>]*)>/gi,
     (_match, attrs: string) => {
@@ -38,6 +39,9 @@ function processImgTags(html: string, articleTitle: string): string {
       return `<img ${out.trim()}>`;
     }
   );
+  } catch {
+    return html;
+  }
 }
 
 interface BlogContentProps {
@@ -54,14 +58,21 @@ interface BlogContentProps {
  * URLs (e.g. Cloudinary) rather than base64 data URIs; base64 inflates HTML size.
  */
 export function BlogContent({ content, articleTitle = "" }: BlogContentProps) {
-  let cleanHtml =
-    typeof content === "string" && content.trim()
-      ? DOMPurify.sanitize(content.trim(), {
-          ALLOWED_TAGS,
-          ALLOWED_ATTR,
-        })
-      : "";
-  cleanHtml = processImgTags(cleanHtml, articleTitle);
+  const rawContent = typeof content === "string" ? content : "";
+  const safeTitle = typeof articleTitle === "string" ? articleTitle : "";
+
+  let cleanHtml = "";
+  try {
+    if (rawContent.trim()) {
+      cleanHtml = DOMPurify.sanitize(rawContent.trim(), {
+        ALLOWED_TAGS,
+        ALLOWED_ATTR,
+      });
+      cleanHtml = processImgTags(cleanHtml, safeTitle);
+    }
+  } catch {
+    cleanHtml = "";
+  }
 
   return (
     <>

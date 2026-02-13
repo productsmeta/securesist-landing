@@ -26,20 +26,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       BlogsUrl.GET_BLOG_BY_SLUG(slug)
     );
     if (response?.status === "success" && response?.data) {
+      const d = response.data;
       const title =
-        response.data.metaTitle?.trim() ||
-        response.data.title?.trim() ||
+        (typeof d.metaTitle === "string" && d.metaTitle.trim()) ||
+        (typeof d.title === "string" && d.title.trim()) ||
         "SECURESIST Blog";
       const description =
-        response.data.metaDescription?.trim() ||
+        (typeof d.metaDescription === "string" && d.metaDescription.trim()) ||
         "Read more on the SECURESIST blog.";
-      const keywords = response.data.keywords && response.data.keywords.length > 0
-        ? response.data.keywords
+      const keywords = Array.isArray(d.keywords) && d.keywords.length > 0
+        ? d.keywords
         : undefined;
       const canonical =
-        response.data.canonical_url?.trim() ||
+        (typeof d.canonical_url === "string" && d.canonical_url.trim()) ||
         `${siteUrl}/${locale}/press-center/${slug}`;
-      const rawImage = response.data.coverImage?.trim();
+      const coverImg = d.coverImage;
+      const rawImage =
+        typeof coverImg === "string"
+          ? coverImg.trim()
+          : coverImg && typeof coverImg === "object" && "url" in coverImg && typeof (coverImg as { url: string }).url === "string"
+            ? (coverImg as { url: string }).url.trim()
+            : "";
       const ogImageUrl =
         rawImage && (rawImage.startsWith("http") ? rawImage : `${siteUrl}${rawImage.startsWith("/") ? "" : "/"}${rawImage}`);
       const fullTitle = `${title} | SECURESIST`;
