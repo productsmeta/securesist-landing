@@ -3,12 +3,20 @@ interface BlogContentProps {
   content: string;
 }
 
+/** Remove target="_blank" from links so they open in the same tab. */
+function removeTargetBlank(html: string): string {
+  return html
+    .replace(/\s*target\s*=\s*["']_blank["']/gi, "")
+    .replace(/\s*target\s*=\s*_blank\b/gi, "");
+}
+
 /**
  * Renders blog body HTML. Sanitization must happen in the API (before response).
  * Do not sanitize here: Edge/Cloudflare can throw 500 with DOMPurify/jsdom.
  */
 export function BlogContent({ content }: BlogContentProps) {
-  const html = typeof content === "string" ? content : "";
+  const raw = typeof content === "string" ? content : "";
+  const html = removeTargetBlank(raw);
 
   return (
     <>
