@@ -63,13 +63,47 @@ export default function HomePage() {
     statistic_Card3_Label: t("statistic_Card3_Label"),
   };
 
+  // Organization Schema
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "SECURESIST",
+    url: "https://securesist.com",
+    logo: "https://securesist.com/logo.png",
+    description:
+      "Transform your organization's cybersecurity posture with intelligent, role-based training that keeps your team engaged and secure.",
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+971-568-966556",
+      contactType: "Customer Service",
+      areaServed: ["AE", "EG", "US"],
+      availableLanguage: ["en", "ar"],
+    },
+    sameAs: [
+      "https://www.facebook.com/people/SecureSist/61587328047197/",
+      "https://www.instagram.com/securesist/",
+      "https://www.youtube.com/@SecureSist",
+      "https://www.linkedin.com/company/securesist/",
+    ],
+  };
+
   return (
-    <div className="min-h-screen bg-white">
-      <Hero data={landingData} />
-      <KeyBenefits data={landingData} />
-      <WhyChoose data={landingData} />
-      <PartnerLogosSlide />
-      <CallToActionSplit />
-    </div>
+    <>
+      {/* Organization Schema Markup */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema),
+        }}
+      />
+
+      <div className="min-h-screen bg-white">
+        <Hero data={landingData} />
+        <KeyBenefits data={landingData} />
+        <WhyChoose data={landingData} />
+        <PartnerLogosSlide />
+        <CallToActionSplit />
+      </div>
+    </>
   );
 }

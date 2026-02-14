@@ -20,19 +20,60 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const isAr = locale === "ar";
+
+  const title = isAr
+    ? "SECURESIST | منصة التوعية بالأمن السيبراني"
+    : "SECURESIST | Cybersecurity Awareness Training";
+
+  const description = isAr
+    ? "حوّل وضع الأمن السيبراني لمؤسستك مع تدريب ذكي قائم على الأدوار يحافظ على تفاعل فريقك وأمانه."
+    : "Transform your organization's cybersecurity posture with intelligent, role-based training that keeps your team engaged and secure.";
+
+  const ogImage = `${siteUrl}/og-home.jpg`; // تأكد من وجود الصورة
+
   return {
-    title: isAr
-      ? "SECURESIST | منصة التوعية بالأمن السيبراني"
-      : "SECURESIST | Cybersecurity Awareness Training",
-    description: isAr
-      ? "حوّل وضع الأمن السيبراني لمؤسستك مع تدريب ذكي قائم على الأدوار يحافظ على تفاعل فريقك وأمانه."
-      : "Transform your organization's cybersecurity posture with intelligent, role-based training that keeps your team engaged and secure.",
+    title,
+    description,
     robots: {
       index: true,
       follow: true,
     },
     alternates: {
       canonical: `${siteUrl}/${locale}`,
+      languages: {
+        en: `${siteUrl}/en`,
+        ar: `${siteUrl}/ar`,
+        "x-default": `${siteUrl}/en`,
+      },
+    },
+    openGraph: {
+      type: "website",
+      title,
+      description,
+      url: `${siteUrl}/${locale}`,
+      siteName: "SECURESIST",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: isAr
+            ? "SECURESIST - منصة التوعية بالأمن السيبراني"
+            : "SECURESIST - Cybersecurity Awareness Training Platform",
+        },
+      ],
+      locale: isAr ? "ar_EG" : "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+      creator: "@securesist",
+      site: "@securesist",
+    },
+    verification: {
+      google: "HHKif-Sg8xktnkDDA_n2i5Kx8v69f7uvCYRl3q56HdE",
     },
   };
 }
@@ -40,17 +81,17 @@ export async function generateMetadata({
 // Fonts
 const zainFont = Zain({
   subsets: ["arabic"],
-  weight: ["300","400","700"],
+  weight: ["300", "400", "700"],
   variable: "--font-zain",
   display: "swap",
-  preload: true
+  preload: true,
 });
 const comfortaa = Comfortaa({
   subsets: ["latin"],
-  weight: ["300","400","700"],
+  weight: ["300", "400", "700"],
   variable: "--font-comfortaa",
   display: "swap",
-  preload: true
+  preload: true,
 });
 
 // Static params for SSG / ISR
@@ -68,13 +109,13 @@ export default async function LocaleLayout({
 }) {
   const locale = (await params).locale;
 
-    // لو اللغه مش موجوده
-  if (!routing.locales.includes(locale as 'en' | 'ar')) notFound();
+  // لو اللغه مش موجوده
+  if (!routing.locales.includes(locale as "en" | "ar")) notFound();
 
   const isArabic = locale === "ar";
 
   // تحميل المسجات من object messages
-  const localeMessages = messages[locale as 'en' | 'ar'] || messages["en"];
+  const localeMessages = messages[locale as "en" | "ar"] || messages["en"];
 
   return (
     <QueryProvider>
