@@ -1,8 +1,5 @@
-
 // Pase Url
-export const baseUrl = "https://securesist.vercel.app/api/landingPage";
-
- 
+export const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.securesist.com/landingPage";
 
 export async function apiFetch<T>(
     url: string,

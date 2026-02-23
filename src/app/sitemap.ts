@@ -1,9 +1,8 @@
 import { MetadataRoute } from 'next'
 import { routing } from '@/i18n/routing'
 
-// Website base URL - update this with your actual domain
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://securesist.vercel.app'
-const apiBaseUrl = 'https://securesist.vercel.app/api/landingPage'
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://securesist.com'
+const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://api.securesist.com/landingPage').trim()
 
 // Static routes for each locale
 const staticRoutes = [

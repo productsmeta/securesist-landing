@@ -33,6 +33,8 @@ interface BlogPostResponse {
   message: string;
 }
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://securesist.com";
+
 export async function generateMetadata({
   params,
 }: {
@@ -47,19 +49,28 @@ export async function generateMetadata({
 
     if (response?.status === "success" && response?.data) {
       const post = response.data;
-      const baseUrl = "https://securesist.com";
-      const url = `${baseUrl}/${locale}/press-center/${post.slug}`;
-      const imageUrl = post.coverImage || `${baseUrl}/og-default.png`;
+      const postSlug = post.slug ?? slug;
+      const canonical = `${siteUrl}/${locale}/press-center/${postSlug}`;
+      const imageUrl = post.coverImage || `${siteUrl}/og-default.png`;
 
       return {
         title: post.metaTitle,
         description: post.metaDescription,
         keywords: post.keywords,
+        robots: { index: true, follow: true },
+        alternates: {
+          canonical,
+          languages: {
+            en: `${siteUrl}/en/press-center/${postSlug}`,
+            ar: `${siteUrl}/ar/press-center/${postSlug}`,
+            "x-default": `${siteUrl}/en/press-center/${postSlug}`,
+          },
+        },
         openGraph: {
           type: "article",
           title: post.metaTitle,
           description: post.metaDescription,
-          url: url,
+          url: canonical,
           siteName: "SECURESIST",
           images: [
             {
@@ -91,6 +102,15 @@ export async function generateMetadata({
   return {
     title: "Blog Post | SECURESIST",
     description: "Read our latest cybersecurity insights and updates.",
+    robots: { index: true, follow: true },
+    alternates: {
+      canonical: `${siteUrl}/${locale}/press-center/${slug}`,
+      languages: {
+        en: `${siteUrl}/en/press-center/${slug}`,
+        ar: `${siteUrl}/ar/press-center/${slug}`,
+        "x-default": `${siteUrl}/en/press-center/${slug}`,
+      },
+    },
   };
 }
 

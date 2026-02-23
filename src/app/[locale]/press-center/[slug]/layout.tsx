@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { apiFetch, BlogsUrl } from "@/helpers/apiConfig";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.securesist.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://securesist.com";
 
 type Props = {
   params: Promise<{ slug: string; locale: string }>;
@@ -32,7 +32,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: "SECURESIST | Blog",
         description: "Read articles and news from SECURESIST.",
         robots: { index: true, follow: true },
-        alternates: { canonical: `${siteUrl}/${locale}/press-center/${slug}` },
+        alternates: {
+          canonical: `${siteUrl}/${locale}/press-center/${slug}`,
+          languages: {
+            en: `${siteUrl}/en/press-center/${slug}`,
+            ar: `${siteUrl}/ar/press-center/${slug}`,
+            "x-default": `${siteUrl}/en/press-center/${slug}`,
+          },
+        },
       };
     }
 
@@ -47,21 +54,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       Array.isArray(post.keywords) && post.keywords.length > 0
         ? post.keywords
         : undefined;
-    const canonical = `${siteUrl}/${locale}/press-center/${post.slug ?? slug}`;
+    const postSlug = post.slug ?? slug;
+    const canonical = `${siteUrl}/${locale}/press-center/${postSlug}`;
 
     return {
       title,
       description,
       keywords,
       robots: { index: true, follow: true },
-      alternates: { canonical },
+      alternates: {
+        canonical,
+        languages: {
+          en: `${siteUrl}/en/press-center/${postSlug}`,
+          ar: `${siteUrl}/ar/press-center/${postSlug}`,
+          "x-default": `${siteUrl}/en/press-center/${postSlug}`,
+        },
+      },
     };
   } catch {
     return {
       title: "SECURESIST | Blog",
       description: "Read articles and news from SECURESIST.",
       robots: { index: true, follow: true },
-      alternates: { canonical: `${siteUrl}/${locale}/press-center/${slug}` },
+      alternates: {
+        canonical: `${siteUrl}/${locale}/press-center/${slug}`,
+        languages: {
+          en: `${siteUrl}/en/press-center/${slug}`,
+          ar: `${siteUrl}/ar/press-center/${slug}`,
+          "x-default": `${siteUrl}/en/press-center/${slug}`,
+        },
+      },
     };
   }
 }
