@@ -15,26 +15,42 @@ const staticRoutes = [
 ]
 
 async function getBlogSlugs(): Promise<string[]> {
+  const allSlugs: string[] = []
+  let page = 1
+  const limit = 50
+
   try {
-    const response = await fetch(`${apiBaseUrl}/blog`, {
-      next: { revalidate: 3600 } // Revalidate every hour
-    })
-    
-    if (!response.ok) {
-      return []
+    while (true) {
+      const response = await fetch(`${apiBaseUrl}/blog?page=${page}&limit=${limit}`, {
+        next: { revalidate: 3600 },
+      })
+
+      if (!response.ok) break
+
+      const data = await response.json()
+
+      if (
+        data.status !== 'success' ||
+        !Array.isArray(data.data) ||
+        data.data.length === 0
+      ) {
+        break
+      }
+
+      allSlugs.push(...data.data.map((post: { slug: string }) => post.slug))
+
+      // Stop if we've fetched all available posts
+      if (allSlugs.length >= data.total || data.data.length < limit) {
+        break
+      }
+
+      page++
     }
-    
-    const data = await response.json()
-    
-    if (data.status === 'success' && data.data && Array.isArray(data.data)) {
-      return data.data.map((post: { slug: string }) => post.slug)
-    }
-    
-    return []
   } catch (error) {
     console.error('Error fetching blog slugs for sitemap:', error)
-    return []
   }
+
+  return allSlugs
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

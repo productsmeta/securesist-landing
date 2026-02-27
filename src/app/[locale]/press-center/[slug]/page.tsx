@@ -6,6 +6,7 @@ import { BlogContent } from "@/components/blog/BlogContent";
 import { BlogPostCTA } from "@/components/blog/BlogPostCTA";
 import { ArticleSchema } from "@/components/blog/ArticleSchema";
 import { Metadata } from "next";
+import { routing } from "@/i18n/routing";
 
 interface BlogAuthor {
   name?: string;
@@ -34,6 +35,52 @@ interface BlogPostResponse {
 }
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://securesist.com";
+const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://api.securesist.com/landingPage").trim();
+
+export async function generateStaticParams(): Promise<{ locale: string; slug: string }[]> {
+  const params: { locale: string; slug: string }[] = [];
+  const allSlugs: string[] = [];
+  let page = 1;
+  const limit = 50;
+
+  try {
+    while (true) {
+      const response = await fetch(`${apiBaseUrl}/blog?page=${page}&limit=${limit}`, {
+        next: { revalidate: 3600 },
+      });
+
+      if (!response.ok) break;
+
+      const data = await response.json();
+
+      if (
+        data.status !== "success" ||
+        !Array.isArray(data.data) ||
+        data.data.length === 0
+      ) {
+        break;
+      }
+
+      allSlugs.push(...data.data.map((post: { slug: string }) => post.slug));
+
+      if (allSlugs.length >= data.total || data.data.length < limit) {
+        break;
+      }
+
+      page++;
+    }
+  } catch {
+    // Return empty array if fetch fails - pages will still render on-demand
+  }
+
+  for (const locale of routing.locales) {
+    for (const slug of allSlugs) {
+      params.push({ locale, slug });
+    }
+  }
+
+  return params;
+}
 
 export async function generateMetadata({
   params,

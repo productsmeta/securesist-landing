@@ -1,34 +1,34 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
+import type { Metadata } from "next";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { SectionHeader } from "@/components/SectionHeader";
-import { Calendar, Clock, ArrowRight, Loader2 } from "lucide-react";
-import { apiFetch } from "@/helpers/apiConfig";
-import { BlogsUrl } from "@/helpers/apiConfig";
+import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-// API Response Types
-interface BlogAuthor {
-  name?: string;
-  [key: string]: unknown;
-}
+const apiBaseUrl = (
+  process.env.NEXT_PUBLIC_API_URL || "https://api.securesist.com/landingPage"
+).trim();
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://securesist.com";
+
+const POSTS_PER_PAGE = 9;
 
 interface BlogPost {
   _id: string;
-  author?: string | BlogAuthor | null;
   title: string;
   slug: string;
-  metaTitle: string;
   metaDescription: string;
   keywords: string[];
   coverImage: string | null;
   content: string;
   category: string;
-  tags: string[];
   readingTime: number;
   createdAt: string;
   updatedAt: string;
@@ -42,7 +42,6 @@ interface BlogsResponse {
   message: string;
 }
 
-// Component Blog Post Type
 interface ComponentBlogPost {
   _id: string;
   slug: string;
@@ -52,8 +51,9 @@ interface ComponentBlogPost {
   readTime: string;
   category: string;
   image: string;
-  featured: boolean;
 }
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString(undefined, {
@@ -75,60 +75,117 @@ const getCategoryColor = (category: string) => {
   return colors[category] || "bg-slate-100 text-slate-700 border-slate-200";
 };
 
-// Helper to check if URL is a video
 const isVideoUrl = (url: string | null): boolean => {
   if (!url) return false;
-  return url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm') || url.toLowerCase().endsWith('.mov') || url.includes('/video/');
+  return (
+    url.toLowerCase().endsWith(".mp4") ||
+    url.toLowerCase().endsWith(".webm") ||
+    url.toLowerCase().endsWith(".mov") ||
+    url.includes("/video/")
+  );
 };
 
-export default function BlogPage() {
-  const {
-    data: blogPosts = [],
-    isLoading: loading,
-    error: queryError,
-  } = useQuery<ComponentBlogPost[]>({
-    queryKey: ["blogs"],
-    queryFn: async () => {
-      const response = await apiFetch<BlogsResponse>(BlogsUrl.GET_ALL_BLOGS);
-      
-      if (response.status === "success" && response.data) {
-        return response.data.map((post, index) => ({
-          _id: post._id,
-          slug: post.slug,
-          title: post.title,
-          excerpt: post.metaDescription || post.content.substring(0, 150) + "...",
-          date: post.createdAt,
-          readTime: `${post.readingTime} min read`,
-          category: post.category,
-          image: post.coverImage || "/contact_us.jpg",
-          featured: index === 0, // First post is featured
-        }));
-      }
-      return [];
-    },
-  });
+// ─── Data Fetching ─────────────────────────────────────────────────────────────
 
-  const error = queryError instanceof Error ? queryError.message : queryError ? "Failed to load blogs" : null;
-  const featuredPost = blogPosts.find((post) => post.featured);
-  const regularPosts = blogPosts.filter((post) => !post.featured);
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-slate-600">Loading blogs...</p>
-        </div>
-      </main>
+async function getBlogPage(
+  page: number
+): Promise<{ posts: ComponentBlogPost[]; total: number }> {
+  try {
+    const response = await fetch(
+      `${apiBaseUrl}/blog?page=${page}&limit=${POSTS_PER_PAGE}`,
+      { next: { revalidate: 3600 } }
     );
-  }
 
-  if (error) {
+    if (!response.ok) return { posts: [], total: 0 };
+
+    const data: BlogsResponse = await response.json();
+
+    if (data.status !== "success" || !Array.isArray(data.data)) {
+      return { posts: [], total: 0 };
+    }
+
+    const posts = data.data.map((post) => ({
+      _id: post._id,
+      slug: post.slug,
+      title: post.title,
+      excerpt:
+        post.metaDescription || post.content.substring(0, 150) + "...",
+      date: post.createdAt,
+      readTime: `${post.readingTime} min read`,
+      category: post.category,
+      image: post.coverImage || "/contact_us.jpg",
+    }));
+
+    return { posts, total: data.total };
+  } catch {
+    return { posts: [], total: 0 };
+  }
+}
+
+// ─── Metadata (per page) ───────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam || "1", 10));
+
+  const canonical =
+    currentPage === 1
+      ? `${siteUrl}/${locale}/press-center`
+      : `${siteUrl}/${locale}/press-center?page=${currentPage}`;
+
+  return {
+    alternates: {
+      canonical,
+      languages: {
+        en:
+          currentPage === 1
+            ? `${siteUrl}/en/press-center`
+            : `${siteUrl}/en/press-center?page=${currentPage}`,
+        ar:
+          currentPage === 1
+            ? `${siteUrl}/ar/press-center`
+            : `${siteUrl}/ar/press-center?page=${currentPage}`,
+        "x-default":
+          currentPage === 1
+            ? `${siteUrl}/en/press-center`
+            : `${siteUrl}/en/press-center?page=${currentPage}`,
+      },
+    },
+  };
+}
+
+// ─── Page Component ────────────────────────────────────────────────────────────
+
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam || "1", 10));
+
+  const { posts, total } = await getBlogPage(currentPage);
+  const totalPages = Math.ceil(total / POSTS_PER_PAGE);
+
+  // Featured post only on first page
+  const featuredPost = currentPage === 1 ? posts[0] : null;
+  const regularPosts = currentPage === 1 ? posts.slice(1) : posts;
+
+  if (posts.length === 0) {
     return (
       <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <p className="text-slate-600 text-lg">
+            No articles available at the moment.
+          </p>
+          <p className="text-slate-400 mt-2 text-sm">Please check back later.</p>
         </div>
       </main>
     );
@@ -149,7 +206,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Featured Post */}
+      {/* Featured Post — page 1 only */}
       {featuredPost && (
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
@@ -186,7 +243,10 @@ export default function BlogPage() {
                   </div>
                   <div className="p-8 md:p-12 flex flex-col justify-center">
                     <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-slate-500">
-                      <Badge variant="outline" className={getCategoryColor(featuredPost.category)}>
+                      <Badge
+                        variant="outline"
+                        className={getCategoryColor(featuredPost.category)}
+                      >
                         {featuredPost.category}
                       </Badge>
                       <div className="flex items-center gap-1">
@@ -204,8 +264,14 @@ export default function BlogPage() {
                     <CardDescription className="text-base mb-6">
                       {featuredPost.excerpt}
                     </CardDescription>
-                    <Button asChild className="group w-fit bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                      <Link href={`/press-center/${featuredPost.slug}`} className="flex items-center gap-2">
+                    <Button
+                      asChild
+                      className="group w-fit bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    >
+                      <Link
+                        href={`/press-center/${featuredPost.slug}`}
+                        className="flex items-center gap-2"
+                      >
                         Read Full Article
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                       </Link>
@@ -227,9 +293,16 @@ export default function BlogPage() {
                 All Articles
               </h2>
               <p className="text-lg text-slate-600">
-                Explore our collection of cybersecurity insights and best practices
+                Explore our collection of cybersecurity insights and best
+                practices
               </p>
+              {totalPages > 1 && (
+                <p className="text-sm text-slate-400 mt-2">
+                  Page {currentPage} of {totalPages} · {total} articles
+                </p>
+              )}
             </div>
+
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {regularPosts.map((post) => (
                 <Card
@@ -257,7 +330,10 @@ export default function BlogPage() {
                       />
                     )}
                     <div className="absolute top-4 left-4">
-                      <Badge variant="outline" className={getCategoryColor(post.category)}>
+                      <Badge
+                        variant="outline"
+                        className={getCategoryColor(post.category)}
+                      >
                         {post.category}
                       </Badge>
                     </div>
@@ -282,7 +358,12 @@ export default function BlogPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center justify-end">
-                      <Button asChild variant="ghost" size="sm" className="group/btn">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="group/btn"
+                      >
                         <Link
                           href={`/press-center/${post.slug}`}
                           className="flex items-center gap-1 text-blue-600"
@@ -296,6 +377,91 @@ export default function BlogPage() {
                 </Card>
               ))}
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-16 flex items-center justify-center gap-2">
+                {/* Previous */}
+                {currentPage > 1 ? (
+                  <Link
+                    href={
+                      currentPage === 2
+                        ? "/press-center"
+                        : `/press-center?page=${currentPage - 1}`
+                    }
+                    className="flex items-center gap-1 px-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-blue-300 transition-all text-sm font-medium"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Link>
+                ) : (
+                  <span className="flex items-center gap-1 px-4 py-2 rounded-lg border border-slate-100 bg-slate-50 text-slate-300 text-sm font-medium cursor-not-allowed">
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </span>
+                )}
+
+                {/* Page Numbers */}
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(
+                      (p) =>
+                        p === 1 ||
+                        p === totalPages ||
+                        Math.abs(p - currentPage) <= 1
+                    )
+                    .reduce<(number | "...")[]>((acc, p, idx, arr) => {
+                      if (idx > 0 && (arr[idx - 1] as number) + 1 < p) {
+                        acc.push("...");
+                      }
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((item, idx) =>
+                      item === "..." ? (
+                        <span
+                          key={`ellipsis-${idx}`}
+                          className="px-2 py-2 text-slate-400 text-sm"
+                        >
+                          …
+                        </span>
+                      ) : (
+                        <Link
+                          key={item}
+                          href={
+                            item === 1
+                              ? "/press-center"
+                              : `/press-center?page=${item}`
+                          }
+                          className={`min-w-[40px] h-10 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${
+                            item === currentPage
+                              ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                              : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-blue-300"
+                          }`}
+                        >
+                          {item}
+                        </Link>
+                      )
+                    )}
+                </div>
+
+                {/* Next */}
+                {currentPage < totalPages ? (
+                  <Link
+                    href={`/press-center?page=${currentPage + 1}`}
+                    className="flex items-center gap-1 px-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-blue-300 transition-all text-sm font-medium"
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                ) : (
+                  <span className="flex items-center gap-1 px-4 py-2 rounded-lg border border-slate-100 bg-slate-50 text-slate-300 text-sm font-medium cursor-not-allowed">
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </section>
