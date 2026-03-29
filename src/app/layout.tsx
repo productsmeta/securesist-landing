@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://securesist.com";
+/** Google tag (gtag.js) — same as https://support.google.com/analytics/answer/10089638 */
+const gaId =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-9VEFKJKECT";
 const defaultLocale = "en";
 
 export const metadata: Metadata = {
@@ -35,6 +39,19 @@ export default function RootLayout({
     <html suppressHydrationWarning>
       <body suppressHydrationWarning>
         {children}
+        {/* Google tag (gtag.js) — equivalent to the snippet from GA admin */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${gaId}');
+          `}
+        </Script>
       </body>
     </html>
   );
