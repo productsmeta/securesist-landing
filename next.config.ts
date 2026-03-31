@@ -3,6 +3,18 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
+const securityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value:
+      "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https:;",
+  },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=()",
+  },
+];
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -34,6 +46,14 @@ const nextConfig: NextConfig = {
   },
   // Optimize fonts
   // optimizeFonts: true,
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: securityHeaders,
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);
