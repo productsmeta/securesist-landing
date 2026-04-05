@@ -1,3 +1,5 @@
+import parse from "html-react-parser";
+
 interface BlogContentProps {
   /** HTML from API — must be sanitized by the API before sending. */
   content: string;
@@ -11,12 +13,47 @@ function removeTargetBlank(html: string): string {
 }
 
 /**
+ * Some APIs store/send the body as HTML-escaped text (e.g. "&lt;p&gt;...")
+ * so it shows up as raw tags in the UI. Decode until stable when we detect that.
+ */
+function decodeHtmlEntitiesIterative(input: string): string {
+  let out = input;
+  let prev = "";
+  let guard = 0;
+  while (out !== prev && guard++ < 12) {
+    prev = out;
+    out = out
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&#x([0-9a-fA-F]+);/g, (_, h) =>
+        String.fromCharCode(parseInt(h, 16))
+      )
+      .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+      .replace(/&nbsp;/g, "\u00A0")
+      .replace(/&amp;/g, "&");
+  }
+  return out;
+}
+
+function unwrapHtmlIfEntityEncoded(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return raw;
+  if (trimmed.startsWith("<")) return raw;
+  if (trimmed.startsWith("&lt;") || trimmed.startsWith("&amp;lt;")) {
+    return decodeHtmlEntitiesIterative(raw);
+  }
+  return raw;
+}
+
+/**
  * Renders blog body HTML. Sanitization must happen in the API (before response).
  * Do not sanitize here: Edge/Cloudflare can throw 500 with DOMPurify/jsdom.
  */
 export function BlogContent({ content }: BlogContentProps) {
   const raw = typeof content === "string" ? content : "";
-  const html = removeTargetBlank(raw);
+  const html = removeTargetBlank(unwrapHtmlIfEntityEncoded(raw));
 
   return (
     <>
@@ -86,10 +123,7 @@ export function BlogContent({ content }: BlogContentProps) {
 `,
         }}
       />
-      <div
-        className="blog-content max-w-none mt-4"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <div className="blog-content max-w-none mt-4">{parse(html)}</div>
     </>
   );
 }
