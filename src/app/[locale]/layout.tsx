@@ -73,7 +73,7 @@ export async function generateMetadata({
       site: "@securesist",
     },
     verification: {
-      google: "HHKif-Sg8xktnkDDA_n2i5Kx8v69f7uvCYRl3q56HdE",
+      google: "zgeY1_3bPzoNudMs9K5h00f5xoejPyfj0kMlnZuM_1A",
     },
   };
 }
