@@ -8,6 +8,8 @@ import { ArticleSchema } from "@/components/blog/ArticleSchema";
 import { Metadata } from "next";
 import { routing } from "@/i18n/routing";
 
+export const revalidate = 0;
+
 interface BlogAuthor {
   name?: string;
   [key: string]: unknown;
@@ -91,7 +93,8 @@ export async function generateMetadata({
 
   try {
     const response = await apiFetch<BlogPostResponse>(
-      BlogsUrl.GET_BLOG_BY_SLUG(slug)
+      BlogsUrl.GET_BLOG_BY_SLUG(slug),
+      { cache: "no-store" }
     );
 
     if (response?.status === "success" && response?.data) {
@@ -172,7 +175,8 @@ export default async function BlogPostPage({
 
   try {
     const response = await apiFetch<BlogPostResponse>(
-      BlogsUrl.GET_BLOG_BY_SLUG(slug)
+      BlogsUrl.GET_BLOG_BY_SLUG(slug),
+      { cache: "no-store" }
     );
     if (response?.status === "success" && response?.data) {
       post = response.data;

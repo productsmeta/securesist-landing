@@ -17,6 +17,7 @@ const apiBaseUrl = (
   process.env.NEXT_PUBLIC_API_URL || "https://api.securesist.com/landingPage"
 ).trim();
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://securesist.com";
+export const revalidate = 0;
 
 const POSTS_PER_PAGE = 9;
 
@@ -93,7 +94,7 @@ async function getBlogPage(
   try {
     const response = await fetch(
       `${apiBaseUrl}/blog?page=${page}&limit=${POSTS_PER_PAGE}`,
-      { next: { revalidate: 3600 } }
+      { cache: "no-store" }
     );
 
     if (!response.ok) return { posts: [], total: 0 };

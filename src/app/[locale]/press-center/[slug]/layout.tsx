@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { apiFetch, BlogsUrl } from "@/helpers/apiConfig";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://securesist.com";
+export const revalidate = 0;
 
 type Props = {
   params: Promise<{ slug: string; locale: string }>;
@@ -23,7 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   try {
     const res = await apiFetch<BlogPostResponse>(
-      BlogsUrl.GET_BLOG_BY_SLUG(slug)
+      BlogsUrl.GET_BLOG_BY_SLUG(slug),
+      { cache: "no-store" }
     );
     const post = res?.data;
 
