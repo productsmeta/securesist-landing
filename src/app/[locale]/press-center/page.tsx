@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { decodeHtmlEntities } from "@/lib/utils";
 
 const apiBaseUrl = (
   process.env.NEXT_PUBLIC_API_URL || "https://api.securesist.com/landingPage"
@@ -108,9 +109,10 @@ async function getBlogPage(
     const posts = data.data.map((post) => ({
       _id: post._id,
       slug: post.slug,
-      title: post.title,
-      excerpt:
-        post.metaDescription || post.content.substring(0, 150) + "...",
+      title: decodeHtmlEntities(post.title),
+      excerpt: decodeHtmlEntities(
+        post.metaDescription || post.content.substring(0, 150) + "..."
+      ),
       date: post.createdAt,
       readTime: `${post.readingTime} min read`,
       category: post.category,
@@ -434,11 +436,10 @@ export default async function BlogPage({
                               ? "/press-center"
                               : `/press-center?page=${item}`
                           }
-                          className={`min-w-[40px] h-10 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${
-                            item === currentPage
+                          className={`min-w-[40px] h-10 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${item === currentPage
                               ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
                               : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-blue-300"
-                          }`}
+                            }`}
                         >
                           {item}
                         </Link>

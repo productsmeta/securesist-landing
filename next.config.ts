@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from 'next-intl/plugin';
 
+// Allow self-signed / incomplete certificate chains in dev (api.securesist.com missing intermediate CA)
+if (process.env.NODE_ENV !== "production") {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
+
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const securityHeaders = [
@@ -29,12 +34,13 @@ const nextConfig: NextConfig = {
   // Optimize bundle size
   experimental: {
     optimizePackageImports: ['lucide-react', 'motion/react'],
+    turbopackUseSystemTlsCerts: true,
   },
   // Enable compression
   compress: true,
   // Optimize images
   // images: {
-   
+
   //   formats: ['image/avif', 'image/webp'],
   //   minimumCacheTTL: 60,
   // },

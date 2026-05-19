@@ -7,6 +7,7 @@ import { BlogPostCTA } from "@/components/blog/BlogPostCTA";
 import { ArticleSchema } from "@/components/blog/ArticleSchema";
 import { Metadata } from "next";
 import { routing } from "@/i18n/routing";
+import { decodeHtmlEntities } from "@/lib/utils";
 
 export const revalidate = 0;
 
@@ -104,8 +105,8 @@ export async function generateMetadata({
       const imageUrl = post.coverImage || `${siteUrl}/og-default.png`;
 
       return {
-        title: post.metaTitle,
-        description: post.metaDescription,
+        title: decodeHtmlEntities(post.metaTitle),
+        description: decodeHtmlEntities(post.metaDescription),
         keywords: post.keywords,
         robots: { index: true, follow: true },
         alternates: {
@@ -118,8 +119,8 @@ export async function generateMetadata({
         },
         openGraph: {
           type: "article",
-          title: post.metaTitle,
-          description: post.metaDescription,
+          title: decodeHtmlEntities(post.metaTitle),
+          description: decodeHtmlEntities(post.metaDescription),
           url: canonical,
           siteName: "SECURESIST",
           images: [
@@ -137,8 +138,8 @@ export async function generateMetadata({
         },
         twitter: {
           card: "summary_large_image",
-          title: post.metaTitle,
-          description: post.metaDescription,
+          title: decodeHtmlEntities(post.metaTitle),
+          description: decodeHtmlEntities(post.metaDescription),
           images: [imageUrl],
           creator: "@securesist",
           site: "@securesist",
@@ -197,8 +198,8 @@ export default async function BlogPostPage({
   return (
     <main className="min-h-screen bg-white">
       <ArticleSchema
-        title={String(post.title ?? "")}
-        description={String(post.metaDescription ?? post.title ?? "")}
+        title={decodeHtmlEntities(String(post.title ?? ""))}
+        description={decodeHtmlEntities(String(post.metaDescription ?? post.title ?? ""))}
         slug={String(post.slug ?? slug)}
         locale={locale}
         image={post.coverImage ?? null}
@@ -208,7 +209,7 @@ export default async function BlogPostPage({
       />
       <BlogPostHero
         coverImage={post.coverImage ?? null}
-        title={String(post.title ?? "")}
+        title={decodeHtmlEntities(String(post.title ?? ""))}
         category={String(post.category ?? "Blog")}
       />
 
