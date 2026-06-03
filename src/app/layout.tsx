@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://securesist.com";
@@ -39,6 +40,7 @@ export default function RootLayout({
     <html suppressHydrationWarning>
       <body suppressHydrationWarning>
         {children}
+        <WhatsAppButton />
         {/* Google tag (gtag.js) — equivalent to the snippet from GA admin */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
